@@ -15,8 +15,9 @@ def main():
         print 'OK'
  
         # Set the height and width of the screen
-        size=[400,300]
-        size=[0,0]
+        size=[1000,700]
+	# for native size
+       	# size=[0,0]
         screen=pygame.display.set_mode(size)
  
         pygame.display.set_caption("WiiShooter")
@@ -33,6 +34,10 @@ def main():
                                 exit=True # Flag that we are done so we exit this loop
 			if event.type == pygame.KEYDOWN:
 				exit=True
+			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+				game.shotFired(event.pos)
+
+# TODO: fix code below, and call game.shotFired with correct coordinates.
 		if gun is not None:
 			gun_pos, trigger = gun.get_pos()
 			gun_pos[0] *= gun_pos[0]
