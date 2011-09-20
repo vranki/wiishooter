@@ -15,7 +15,8 @@ def main():
         print 'OK'
  
         # Set the height and width of the screen
-        size=[1024,768]
+        size=[400,300]
+        size=[0,0]
         screen=pygame.display.set_mode(size)
  
         pygame.display.set_caption("WiiShooter")
