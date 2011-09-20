@@ -24,6 +24,7 @@ def main():
         clock=pygame.time.Clock()
 
 	game = gamelogic.GameLogic()
+	game.init(screen, clock)
         exit = False
         while not exit:
                 for event in pygame.event.get(): # User did something
@@ -36,15 +37,13 @@ def main():
 			gun_pos[0] *= gun_pos[0]
 			gun_pos[1] *= gun_pos[1]
 
-                 # Set the screen background
-        	screen.fill((255,255,255))
  
         	# Limit to 60 frames per second
         	clock.tick(60)
- 
+		game.tick() 
         	# Go ahead and update the screen with what we've drawn.
-        	pygame.display.flip()
- 
+         	pygame.display.update()
+
         pygame.quit ()
 	if gun is not None:
 	        gun.close()
