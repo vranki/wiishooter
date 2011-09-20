@@ -119,6 +119,12 @@ class Ak47:
                         (calib_max_x1 + calib_max_x2) / 2.0, \
                         (calib_min_y1 + calib_min_y2) / 2.0, \
                         (calib_max_y1 + calib_max_y2) / 2.0 ]
+	
+	print "calib points", self.calib_points
+	print "calib points2", calib_min_x1, calib_min_x2, calib_max_x1, calib_max_x2, \
+                              calib_min_y1, calib_min_y2, calib_max_y1, calib_max_y2
+	print "minmax", self.maxmin
+
 
     def valid_value(self):
 	if len(self.ir_pos) != 4:
