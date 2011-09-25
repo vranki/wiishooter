@@ -68,6 +68,8 @@ def main():
 		gun_pos[0] = int(gun_pos[0]*910)+150
 		gun_pos[1] = int(gun_pos[1]*400)
 
+                gun.get_motion()
+
                  # Set the screen background
         	screen.fill((255,255,255))
  
