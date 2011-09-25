@@ -11,6 +11,7 @@ class Ak47:
         self.calib_points = []
         self.maxmin = []
         self.fire_button = False
+        self.dist_values = []
 
 	fov_scale = 1.33
         self.x_pix = fov_scale*33/1024.0 #[deg/pixel]
@@ -163,8 +164,23 @@ class Ak47:
         # angle between ir-blobs
         alfa = sqrt( (led1[0] - led2[0]) ** 2 + (led1[1] - led2[1]) ** 2 ) * pix
 
-        self.dist = ir_sensor_width / tan(alfa*pi/180)
+        
+        local_dist = ir_sensor_width / tan(alfa*pi/180)
         #self.dist = tan(alfa*pi/180)
+
+
+        # mean value filtering (low pass filter)
+        self.dist_values.append(local_dist)
+
+        if len(self.dist_values) > 10:
+            self.dist_values.pop(0)
+
+        self.dist = 0
+
+        for dist in self.dist_values:
+            self.dist += dist 
+
+        self.dist = self.dist/len(self.dist_values)
 
 
     def callback(self, mesg_list, time):
