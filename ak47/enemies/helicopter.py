@@ -9,19 +9,29 @@ from enemy import *
 class Helicopter(Enemy):
     def __init__(self, scale, scr, clk, fx):
 	Enemy.__init__(self, scale, scr, clk, fx)
-	self.heli = pygame.image.load('gfx/helicopter.png').convert_alpha()
-	self.helix = pygame.Rect(0, 0, self.heli.get_width(), self.heli.get_height())
-	self.heli = self.scaleBitmap(self.heli, self.gfxscale)
-	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
-	self.helix.top = random.randint(0,self.screen.get_height()/2) * self.gfxscale
+	self.heli_orig = pygame.image.load('gfx/helicopter.png').convert_alpha()
+	self.helix = pygame.Rect(0, 0, self.heli_orig.get_width(), self.heli_orig.get_height())
+	self.heli_orig = self.scaleBitmap(self.heli_orig, self.gfxscale)
 	self.hitPoints = 5
+	self.resetPos()
+
+    def resetPos(self):
+	if(random.random() > 0.5):
+		self.xspeed = random.randint(10,100)
+		self.helix.left=-self.heli_orig.get_width()*self.gfxscale * 5
+		self.heli = self.heli_orig
+	else:
+		self.xspeed = random.randint(-100,-10)
+		self.helix.left=self.screen.get_width() + self.heli_orig.get_width()*self.gfxscale * 5
+		self.heli = pygame.transform.flip(self.heli_orig, True, False)
+
+	self.helix.top = random.randint(0,self.screen.get_height()/2) * self.gfxscale
 
     def tick(self):
 	Enemy.tick(self)
-    	# Set the screen background
-	self.helix.left += float(self.clock.get_time()) / 5
-	if self.helix.left > 1360:
-		self.helix.left = 0.0
+	self.helix.left += (self.xspeed * float(self.clock.get_time())) / 100
+	if (self.xspeed > 0 and self.helix.left > self.screen.get_width()) or (self.xspeed < 0 and self.helix.left + self.heli.get_width() < 0):
+		self.resetPos()
 	self.screen.blit(self.heli, ( self.helix.left*self.gfxscale,self.helix.top*self.gfxscale), None)
 
     def shotFired(self, coords):
