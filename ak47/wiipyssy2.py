@@ -65,8 +65,8 @@ def main():
 				exit=True
 
 		gun_pos, trigger = gun.get_pos()
-		gun_pos[0] = int(gun_pos[0]*910)+150
-		gun_pos[1] = int(gun_pos[1]*400)
+		gun_pos[0] = int(gun_pos[0]*1060)+150
+		gun_pos[1] = int(gun_pos[1]*400)+0
 
                  # Set the screen background
         	screen.fill((255,255,255))
@@ -76,6 +76,9 @@ def main():
 		if trigger and not old_trigger and calib_index < 4:
 			gun.calibrate(calib_index)
 			calib_index += 1
+
+		if trigger and not old_trigger and calib_index > 3:
+			print gun_pos
 			
 		old_trigger = trigger
 

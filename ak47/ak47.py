@@ -12,6 +12,7 @@ class Ak47:
         self.maxmin = []
         self.fire_button = False
         self.dist_values = []
+	self.reso = (1024,768) #wiimote
 
 	fov_scale = 1.33
         self.x_pix = fov_scale*33/1024.0 #[deg/pixel]
@@ -61,8 +62,10 @@ class Ak47:
             ret_y = self.cpoint[1] / 768.0
             return [ret_x, ret_y], self.fire_button
 
-        x = self.dist * tan(self.x_pix*self.cpoint[0]*pi/180)
-        y = self.dist * tan(self.y_pix*self.cpoint[1]*pi/180)
+	cent = (self.reso[0]/2, self.reso[1]/2)
+
+        x = self.dist * tan(self.x_pix*(-self.cpoint[0]+cent[0])*pi/180)
+        y = self.dist * tan(self.y_pix*(-self.cpoint[1]+cent[1])*pi/180)
 
         x_scale = 1.0/(self.maxmin[0] - self.maxmin[1])
         y_scale = 1.0/(self.maxmin[2] - self.maxmin[3])
@@ -92,17 +95,22 @@ class Ak47:
         else:
             self.calib_points.append(temp_pos)
 
-        calib_min_x1 = self.dist * tan(self.x_pix*self.calib_points[0][0]*pi/180)
-        calib_min_x2 = self.dist * tan(self.x_pix*self.calib_points[1][0]*pi/180)
+	cent = (self.reso[0]/2, self.reso[1]/2)
 
-        calib_min_y1 = self.dist * tan(self.y_pix*self.calib_points[0][1]*pi/180)
-        calib_min_y2 = self.dist * tan(self.y_pix*self.calib_points[3][1]*pi/180)
+	x_const = self.x_pix*pi/180
+	y_const = self.x_pix*pi/180
 
-        calib_max_x1 = self.dist * tan(self.x_pix*self.calib_points[2][0]*pi/180)
-        calib_max_x2 = self.dist * tan(self.x_pix*self.calib_points[3][0]*pi/180)
+        calib_min_x1 = self.dist * tan(x_const*(cent[0] - self.calib_points[0][0]))
+        calib_min_x2 = self.dist * tan(x_const*(cent[0] - self.calib_points[1][0]))
 
-        calib_max_y1 = self.dist * tan(self.y_pix*self.calib_points[1][1]*pi/180)
-        calib_max_y2 = self.dist * tan(self.y_pix*self.calib_points[2][1]*pi/180)
+        calib_min_y1 = self.dist * tan(y_const*(cent[1] - self.calib_points[0][1]))
+        calib_min_y2 = self.dist * tan(y_const*(cent[1] - self.calib_points[3][1]))
+
+        calib_max_x1 = self.dist * tan(x_const*(cent[0] - self.calib_points[2][0]))
+        calib_max_x2 = self.dist * tan(x_const*(cent[0] - self.calib_points[3][0]))
+
+        calib_max_y1 = self.dist * tan(y_const*(cent[1] - self.calib_points[1][1]))
+        calib_max_y2 = self.dist * tan(y_const*(cent[1] - self.calib_points[2][1]))
 
         if abs(calib_min_x1 - calib_min_x2) > 25:
             print "calib error #1", calib_min_x1, calib_min_x2
