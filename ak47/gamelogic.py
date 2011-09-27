@@ -1,14 +1,19 @@
 #!/usr/bin/python
 import sys
 import pygame
+from enemy import *
+sys.path.append("enemies")
+from helicopter import *
 from pygame.locals import *
+from effects import *
 
 class GameLogic:
     def __init__(self):
-	self.bg = pygame.image.load('gfx/background.png').convert()
-	self.heli = pygame.image.load('gfx/helicopter.png').convert()
-	self.helix = pygame.Rect(0, 0, self.heli.get_width(), self.heli.get_height())
+	self.bg = pygame.image.load('gfx/background.png').convert_alpha()
 	self.gfxscale = 1.0
+	self.enemies = []
+	self.lastEnemyAddedTime = pygame.time.get_ticks()
+	self.enemyAddInterval = 10000
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -18,27 +23,35 @@ class GameLogic:
 	self.clock = clk
 	self.gfxscale = float(self.screen.get_width()) / 1360.0
 	self.bg = self.scaleBitmap(self.bg, self.gfxscale)
-	self.heli = self.scaleBitmap(self.heli, self.gfxscale)
-	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
+	self.effects = Effects(self.gfxscale, self.screen, self.clock)
+	self.addRandomEnemy()
 
     def tick(self):
-    	# Set the screen background
-	self.helix.left += float(self.clock.get_time()) / 5
-	if self.helix.left > 1360:
-		self.helix.left = 0.0
+	curtime = pygame.time.get_ticks()
 	self.screen.blit(self.bg, (0,0))
-	self.screen.blit(self.heli, ( self.helix.left*self.gfxscale,self.helix.top*self.gfxscale), None, BLEND_RGBA_MULT)
+	for enemy in self.enemies:
+		enemy.tick()
+		if enemy.isDead():
+			self.enemies.remove(enemy)
+	self.effects.tick()
+	if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
+		self.addRandomEnemy()
 
     def shotFired(self, coords):
 	scaledCoords = list(coords)
 	scaledCoords[0] /= self.gfxscale
 	scaledCoords[1] /= self.gfxscale
-	if self.helix.collidepoint(scaledCoords):
-		self.heliDestroyed()
+	self.effects.addExplosion(scaledCoords, 0.1, 100)
+	for enemy in self.enemies:
+		enemy.shotFired(scaledCoords)
 
-    def heliDestroyed(self):
-	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
-
+    def addRandomEnemy(self):
+	heli = Helicopter(self.gfxscale, self.screen, self.clock, self.effects)
+	self.enemies.append(heli)
+	if self.enemyAddInterval > 1000:
+		self.enemyAddInterval = self.enemyAddInterval - 500
+	self.lastEnemyAddedTime = pygame.time.get_ticks()
+	
     def close(self):
 	pass
 
