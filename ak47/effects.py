@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import pygame
+import random
 from enemy import *
 from pygame.locals import *
 
@@ -9,22 +10,36 @@ class Effects(Enemy):
 	Enemy.__init__(self, scale, scr, clk, self)
 	self.explosion = pygame.image.load('gfx/explosion.png').convert_alpha()
 	self.explosion = self.scaleBitmap(self.explosion, self.gfxscale)
+	self.explosion_s = pygame.image.load('gfx/explosion_start.png').convert_alpha()
+	self.explosion_s = self.scaleBitmap(self.explosion_s, self.gfxscale)
+	self.explosion_e = pygame.image.load('gfx/explosion_end.png').convert_alpha()
+	self.explosion_e = self.scaleBitmap(self.explosion_e, self.gfxscale)
 	self.objects = []
 
     def tick(self):
 	Enemy.tick(self)
 	curtime = pygame.time.get_ticks()
 	for obj in self.objects:
-		self.screen.blit(obj[1], [obj[0][0] * self.gfxscale, obj[0][1] * self.gfxscale], None)
 		age = curtime - obj[2]
-		if age > 0:
+		idx = 0
+		if age > obj[3] / 3:
+			idx = idx + 1
+		if age > obj[3] / 3 * 2:
+			idx = idx + 1
+
+		bmp = obj[1][idx]
+		self.screen.blit(bmp, [obj[0][0] * self.gfxscale, obj[0][1] * self.gfxscale], None)
+		if age > obj[3]:
 			self.objects.remove(obj)
 		
-    def addExplosion(self, pos, scale, time=1000):
-	bmp = pygame.transform.rotozoom(self.explosion, 0, scale)
+    def addExplosion(self, pos, scale, time=500):
+	bmp = []
+	bmp.append(pygame.transform.rotozoom(self.explosion_s, 0, scale))
+	bmp.append(pygame.transform.rotozoom(self.explosion, 0, scale))
+	bmp.append(pygame.transform.rotozoom(self.explosion_e, 0, scale))
 	pos = list(pos)
-	pos[0] = pos[0] - bmp.get_width() / 2
-	pos[1] = pos[1] - bmp.get_height() / 2
+	pos[0] = pos[0] - bmp[0].get_width() / 2
+	pos[1] = pos[1] - bmp[0].get_height() / 2
 
-	self.objects.append([pos, bmp, pygame.time.get_ticks() + time])
+	self.objects.append([pos, bmp, pygame.time.get_ticks(), time])
 

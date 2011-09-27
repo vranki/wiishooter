@@ -8,6 +8,8 @@ class Enemy:
 	self.screen = scr
 	self.clock = clk
 	self.effects = fx
+	self.dead = False
+	self.hitPoints = 1
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -17,4 +19,7 @@ class Enemy:
 
     def shotFired(self, coords):
 	pass
+
+    def isDead(self):
+	return self.dead
 

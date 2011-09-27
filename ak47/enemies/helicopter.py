@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import pygame
+import random
 from pygame.locals import *
 sys.path.append("..")
 from enemy import *
@@ -12,6 +13,8 @@ class Helicopter(Enemy):
 	self.helix = pygame.Rect(0, 0, self.heli.get_width(), self.heli.get_height())
 	self.heli = self.scaleBitmap(self.heli, self.gfxscale)
 	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
+	self.helix.top = random.randint(0,self.screen.get_height()/2) * self.gfxscale
+	self.hitPoints = 5
 
     def tick(self):
 	Enemy.tick(self)
@@ -24,10 +27,12 @@ class Helicopter(Enemy):
     def shotFired(self, coords):
 	Enemy.shotFired(self, coords)
 	if self.helix.collidepoint(coords):
-		self.heliDestroyed()
+		self.hitPoints = self.hitPoints - 1
+		if self.hitPoints == 0:
+			self.heliDestroyed()
 
     def heliDestroyed(self):
-	print str(self.helix)
 	self.effects.addExplosion(self.helix.center, 1)
+	self.dead = True
 	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
 
