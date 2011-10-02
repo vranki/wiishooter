@@ -12,8 +12,8 @@ pygame.init()
 #<<<<<<< HEAD
 dogImg      =  [pygame.image.load("DogIdle.gif"),
                 pygame.image.load("DogDuck.gif")]
-duckImg     = [[pygame.image.load("duckUD1.gif"),
-                pygame.image.load("duckUD2.gif"),
+duckImg     = [[pygame.image.load("DuckUD1.gif"),
+                pygame.image.load("DuckUD2.gif"),
                 pygame.image.load("DuckUD3.gif")],
                [pygame.image.load("DuckF1.gif"),
                 pygame.image.load("DuckF2.gif"),
@@ -392,27 +392,29 @@ class setPiece(pygame.sprite.Sprite):
 
 class Crosshair(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, gun):
         pygame.sprite.Sprite.__init__(self)
         self.image       = pygame.image.load("Crosshair.gif")
         self.image       = self.image.convert()
         self.rect        = self.image.get_rect()
-        self.rect.center = pygame.mouse.get_pos()
+        self.rect.center, trigger = gun.get_pos()
+	self.gun = gun
 
     def update(self):
 
-        self.rect.center = pygame.mouse.get_pos()
+        self.rect.center, trigger = self.gun.get_pos()
 
         
 class Flash(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, gun):
         pygame.sprite.Sprite.__init__(self)
         self.image       = pygame.image.load("Gunshot.gif")
         self.image       = self.image.convert()
         self.rect        = self.image.get_rect()
-        self.rect.center = pygame.mouse.get_pos()
+        self.rect.center, trigger = gun.get_pos()
         self.pause       = 0
+
 
     def update(self):
         self.pause += 1

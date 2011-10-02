@@ -9,11 +9,14 @@ import pygame, random
 pygame.init()
 
 from DuckLib import *
+import ak47
+import time
 
 screen     = pygame.display.set_mode((640,480), pygame.FULLSCREEN)
 screen_dim = screen.get_rect()
 pygame.display.set_caption("Duck Rehunt: Reckoning")
-
+myAK = ak47.Ak47()
+myAK.load_calibration("full_screen_calib.txt")
 
 def gamePlay():
 
@@ -30,7 +33,7 @@ def gamePlay():
 
     dSprites.add(Dog())
 
-    crosshair = pygame.sprite.Group(Crosshair())
+    #crosshair = pygame.sprite.Group(Crosshair(myAK))
                           
     keepGoing = True
     pause     = 0
@@ -50,6 +53,7 @@ def gamePlay():
     clock = pygame.time.Clock()
 
     killGame = False
+    trigTime = time.time()
     
     while keepGoing:
 
@@ -68,10 +72,15 @@ def gamePlay():
             elif event.type == pygame.KEYDOWN:
                 keepGoing = False
                 killGame = True
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                gunshot.play()
-                flash.add(Flash())
-                pointCollide = [sprite for sprite in dSprites.sprites() if sprite.rect.collidepoint(pygame.mouse.get_pos())]
+
+
+	gun_pos, trigger = myAK.get_pos()
+	if trigger and time.time() - trigTime > 0.1:
+                trigTime = time.time()
+                myAK.fire()
+        	gunshot.play()
+                flash.add(Flash(myAK))
+                pointCollide = [sprite for sprite in dSprites.sprites() if sprite.rect.collidepoint(gun_pos)]
                 if pointCollide != []:
                     for sprite in pointCollide:
                         if not sprite.dog and not sprite.isDead:
@@ -86,6 +95,9 @@ def gamePlay():
                     score += shotScore
                     shotScore = 0
                     scoreboard = myFont.render("Score: " + str(score), 1, (255,255,255))
+
+	if time.time() - trigTime > 0.05:
+            myAK.fire()
 
         if abs(timeLeft - 10.0) < 0.001:
             dSprites.add(Dog())
@@ -103,11 +115,11 @@ def gamePlay():
             dSprites.remove([sprite for sprite in dSprites.sprites() if sprite.rect.centery >= 500])
 
         dSprites.clear(screen, background)
-        crosshair.clear(screen, background)
+        #crosshair.clear(screen, background)
         flash.clear(screen, background)
 
         dSprites.update()
-        crosshair.update()
+        #crosshair.update()
         flash.update()
         
         dSprites.draw(screen)
@@ -116,7 +128,7 @@ def gamePlay():
         screen.blit(scoreboard, (440,410))
         screen.blit(timeboard, (240,410))
         flash.draw(screen)
-        crosshair.draw(screen)
+        #crosshair.draw(screen)
         pygame.display.flip()
     dSprites.empty()
     return killGame, score
@@ -128,7 +140,7 @@ def welcomeScreen():
     background     = pygame.Surface(screen.get_size())
     background.blit(pygame.image.load("Background2.gif"), (0,0))
     screen.blit(background, (0,0))
-    crosshair = pygame.sprite.Group(Crosshair())
+    crosshair = pygame.sprite.Group(Crosshair(myAK))
     myFont1 = pygame.font.Font(None, 22)
     titleFont1 = pygame.font.Font(None, 40)
     #myFont2 = pygame.font.Font(None, 30)
@@ -150,6 +162,7 @@ def welcomeScreen():
     keepGoing = True
     killGame = False
     clock = pygame.time.Clock()
+    trigTime = time.time()
 
     while keepGoing:
 
@@ -164,12 +177,19 @@ def welcomeScreen():
                 keepGoing = False
                 killGame = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                gunshot.play()
-                flash.add(Flash())
-                mpos = pygame.mouse.get_pos()
+		pass
 
-                if mpos[0] < 600 and mpos[0] > 500 and mpos[1] > 380 and mpos[1] < 430:
+	gun_pos, trigger = myAK.get_pos()
+	if trigger and time.time() - trigTime > 0.1:
+                trigTime = time.time()
+                gunshot.play()
+                flash.add(Flash(myAK))
+
+                if gun_pos[0] < 600 and gun_pos[0] > 500 and gun_pos[1] > 380 and gun_pos[1] < 430:
                     keepGoing = False
+
+	if time.time() - trigTime > 0.05:
+            myAK.fire()
 
         crosshair.clear(screen, background)
         flash.clear(screen, background)
@@ -202,7 +222,7 @@ def highScores(myScore):
     background     = pygame.Surface(screen.get_size())
     background.blit(pygame.image.load("Background2.gif"), (0,0))
     screen.blit(background, (0,0))
-    crosshair = pygame.sprite.Group(Crosshair())
+    crosshair = pygame.sprite.Group(Crosshair(myAK))
     myFont1 = pygame.font.Font(None, 22)
     titleFont1 = pygame.font.Font(None, 40)
     #myFont2 = pygame.font.Font(None, 30)
@@ -251,6 +271,8 @@ def highScores(myScore):
     keepGoing = True
     killGame = False
     clock = pygame.time.Clock()
+    trigTime = time.time()
+
 
     while keepGoing:
 
@@ -265,12 +287,19 @@ def highScores(myScore):
                 keepGoing = False
                 killGame = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                gunshot.play()
-                flash.add(Flash())
-                mpos = pygame.mouse.get_pos()
+		pass
 
-                if mpos[0] < 400 and mpos[0] > 300 and mpos[1] > 380 and mpos[1] < 430:
+	gun_pos, trigger = myAK.get_pos()
+	if trigger and time.time() - trigTime > 0.1:
+                trigTime = time.time()
+                gunshot.play()
+                flash.add(Flash(myAK))
+
+                if gun_pos[0] < 400 and gun_pos[0] > 300 and gun_pos[1] > 380 and gun_pos[1] < 430:
                     keepGoing = False
+
+	if time.time() - trigTime > 0.05:
+            myAK.fire()
 
         crosshair.clear(screen, background)
         flash.clear(screen, background)
