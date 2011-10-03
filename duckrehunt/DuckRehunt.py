@@ -17,12 +17,10 @@ screen_dim = screen.get_rect()
 pygame.display.set_caption("Duck Rehunt: Reckoning")
 myAK = ak47.Ak47()
 myAK.load_calibration("full_screen_calib.txt")
+pygame.mixer.init()
+pygame.mixer.Sound("Music.ogg").play(-1)
 
 def gamePlay():
-
-    pygame.mixer.init()
-    pygame.mixer.Sound("Music.ogg").play(-1)
-
     background     = pygame.Surface(screen.get_size())
     background.blit(pygame.image.load("Background.gif"), (0,0))
     screen.blit(background, (0,0))
@@ -77,7 +75,8 @@ def gamePlay():
 	gun_pos, trigger = myAK.get_pos()
 	if trigger and time.time() - trigTime > 0.1:
                 trigTime = time.time()
-                myAK.fire()
+                myAK.fire(True)
+		score -= 1
         	gunshot.play()
                 flash.add(Flash(myAK))
                 pointCollide = [sprite for sprite in dSprites.sprites() if sprite.rect.collidepoint(gun_pos)]
@@ -94,10 +93,11 @@ def gamePlay():
                     shotScore *= len(pointCollide)
                     score += shotScore
                     shotScore = 0
-                    scoreboard = myFont.render("Score: " + str(score), 1, (255,255,255))
+
+        scoreboard = myFont.render("Score: " + str(score), 1, (255,255,255))
 
 	if time.time() - trigTime > 0.05:
-            myAK.fire()
+            myAK.fire(False)
 
         if abs(timeLeft - 10.0) < 0.001:
             dSprites.add(Dog())
@@ -181,7 +181,8 @@ def welcomeScreen():
 
 	gun_pos, trigger = myAK.get_pos()
 	if trigger and time.time() - trigTime > 0.1:
-                trigTime = time.time()
+		myAK.fire(True)                
+		trigTime = time.time()
                 gunshot.play()
                 flash.add(Flash(myAK))
 
@@ -189,7 +190,7 @@ def welcomeScreen():
                     keepGoing = False
 
 	if time.time() - trigTime > 0.05:
-            myAK.fire()
+            myAK.fire(False)
 
         crosshair.clear(screen, background)
         flash.clear(screen, background)
@@ -218,7 +219,6 @@ def welcomeScreen():
 
 
 def highScores(myScore):
-    pygame.mixer.init()
     background     = pygame.Surface(screen.get_size())
     background.blit(pygame.image.load("Background2.gif"), (0,0))
     screen.blit(background, (0,0))
@@ -232,8 +232,6 @@ def highScores(myScore):
     lines = []
     f = open("highscores.txt", "r")
 
-    print f
-
     lines.append(myFont1.render("Your score was: " + str(myScore), 1, (0,0,0)))
     lines.append(myFont1.render("", 1, (0,0,0)))
     lines.append(myFont1.render("TOP 3", 1, (0,0,0)))
@@ -244,12 +242,12 @@ def highScores(myScore):
 
     for line in f:
         line = line.strip()
-        if int(line) < myScore:
+        if int(line) < myScore and not top3Flag:
             scores.append(myScore)
             top3Flag = True
         scores.append(int(line))
 
-    print scores
+    #print scores
 
     f.close()
     f = open("highscores.txt", "w+")
@@ -291,6 +289,7 @@ def highScores(myScore):
 
 	gun_pos, trigger = myAK.get_pos()
 	if trigger and time.time() - trigTime > 0.1:
+		myAK.fire(True)
                 trigTime = time.time()
                 gunshot.play()
                 flash.add(Flash(myAK))
@@ -299,7 +298,7 @@ def highScores(myScore):
                     keepGoing = False
 
 	if time.time() - trigTime > 0.05:
-            myAK.fire()
+            myAK.fire(False)
 
         crosshair.clear(screen, background)
         flash.clear(screen, background)
