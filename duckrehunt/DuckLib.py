@@ -39,7 +39,7 @@ negaDuckImg = [[pygame.image.load("DarkwingSp.gif")],
                 pygame.image.load("DarkwingFlap2.gif")]]
 
 #Load in Sound
-gunshot    = pygame.mixer.Sound("Gunshot.ogg")
+gunshot    = pygame.mixer.Sound("gun.wav")
 quack      = pygame.mixer.Sound("Quack.ogg")
 
 dSprites   = pygame.sprite.Group()
