@@ -50,7 +50,7 @@ class GameLogic:
 	if self.health > 0:
 		self.healthText = self.font.render("Health " + str(self.health),True,(0,0,0))
 	else:
-		self.healthText = self.font.render("NET HARASOO")
+		self.healthText = self.font.render("MERTVYI")
 
 # coords must be physical, unscaled pixels
     def shotFired(self, coords):
