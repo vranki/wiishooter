@@ -9,7 +9,6 @@ def main():
         pygame.init()
         pygame.mixer.init()
  	gun = None
-        #gunSound = pygame.mixer.Sound('gun.wav')
         print 'Put ak47 in discoverable mode now (press connection button)...'
 #	gun = ak47.Ak47()
         print 'OK'

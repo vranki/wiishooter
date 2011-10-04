@@ -4,6 +4,7 @@ import pygame
 from enemy import *
 sys.path.append("enemies")
 from helicopter import *
+from panzer import *
 from pygame.locals import *
 from effects import *
 
@@ -37,17 +38,23 @@ class GameLogic:
 	if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
 		self.addRandomEnemy()
 
+# coords must be physical, unscaled pixels
     def shotFired(self, coords):
 	scaledCoords = list(coords)
 	scaledCoords[0] /= self.gfxscale
 	scaledCoords[1] /= self.gfxscale
 	self.effects.addExplosion(scaledCoords, 0.1, 100)
+	self.effects.playGun()
 	for enemy in self.enemies:
 		enemy.shotFired(scaledCoords)
 
     def addRandomEnemy(self):
-	heli = Helicopter(self.gfxscale, self.screen, self.clock, self.effects)
-	self.enemies.append(heli)
+	enemyType = random.randint(0,1)
+	if enemyType is 0:
+		enemy = Panzer(self.gfxscale, self.screen, self.clock, self.effects)
+	if enemyType is 1:
+		enemy = Helicopter(self.gfxscale, self.screen, self.clock, self.effects)
+	self.enemies.append(enemy)
 	if self.enemyAddInterval > 1000:
 		self.enemyAddInterval = self.enemyAddInterval - 500
 	self.lastEnemyAddedTime = pygame.time.get_ticks()

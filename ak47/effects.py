@@ -16,6 +16,9 @@ class Effects(Enemy):
 	self.explosion_e = self.scaleBitmap(self.explosion_e, self.gfxscale)
 	self.objects = []
 
+	self.gunSound = pygame.mixer.Sound('sounds/gun.wav')
+
+
     def tick(self):
 	Enemy.tick(self)
 	curtime = pygame.time.get_ticks()
@@ -42,4 +45,7 @@ class Effects(Enemy):
 	pos[1] = pos[1] - bmp[0].get_height() / 2
 
 	self.objects.append([pos, bmp, pygame.time.get_ticks(), time])
+
+    def playGun(self):
+	self.gunSound.play()
 
