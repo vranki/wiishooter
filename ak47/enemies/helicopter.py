@@ -29,7 +29,7 @@ class Helicopter(Enemy):
 
     def tick(self):
 	Enemy.tick(self)
-	self.helix.left += (self.xspeed * float(self.clock.get_time())) / 100
+	self.helix.left += (self.xspeed * float(self.clock.get_time())) / 100.0
 	if (self.xspeed > 0 and self.helix.left > self.screen.get_width()) or (self.xspeed < 0 and self.helix.left + self.heli.get_width() < 0):
 		self.resetPos()
 	self.screen.blit(self.heli, ( self.helix.left*self.gfxscale,self.helix.top*self.gfxscale), None)
@@ -45,4 +45,5 @@ class Helicopter(Enemy):
 	self.effects.addExplosion(self.helix.center, 1)
 	self.dead = True
 	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
+	self.effects.playExplosion()
 

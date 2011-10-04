@@ -15,6 +15,9 @@ class GameLogic:
 	self.enemies = []
 	self.lastEnemyAddedTime = pygame.time.get_ticks()
 	self.enemyAddInterval = 10000
+	self.font = pygame.font.Font(None, 25)
+	self.health = 100
+	self.updateHealth()
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -32,11 +35,22 @@ class GameLogic:
 	self.screen.blit(self.bg, (0,0))
 	for enemy in self.enemies:
 		enemy.tick()
+		di = enemy.getDamageInflicted()
+		if di > 0:
+			self.health -= di
+			self.updateHealth()
 		if enemy.isDead():
 			self.enemies.remove(enemy)
 	self.effects.tick()
 	if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
 		self.addRandomEnemy()
+	self.screen.blit(self.healthText, [10,10])
+
+    def updateHealth(self):
+	if self.health > 0:
+		self.healthText = self.font.render("Health " + str(self.health),True,(0,0,0))
+	else:
+		self.healthText = self.font.render("NET HARASOO")
 
 # coords must be physical, unscaled pixels
     def shotFired(self, coords):
@@ -50,6 +64,7 @@ class GameLogic:
 
     def addRandomEnemy(self):
 	enemyType = random.randint(0,1)
+#	enemyType = 0
 	if enemyType is 0:
 		enemy = Panzer(self.gfxscale, self.screen, self.clock, self.effects)
 	if enemyType is 1:

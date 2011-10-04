@@ -20,18 +20,19 @@ class Panzer(Enemy):
 		self.xspeed = float(random.randint(3,10))
 		self.helix.left=-self.heli_orig.get_width()*self.gfxscale * 5
 		self.heli = self.heli_orig
-		self.firingPos = random.randint(self.screen.get_width()/3,self.screen.get_width()/3+self.screen.get_width()/3) 
 	else:
 		self.xspeed = float(random.randint(-10,-3))
 		self.helix.left=self.screen.get_width() + self.heli_orig.get_width()*self.gfxscale * 5
 		self.heli = pygame.transform.flip(self.heli_orig, True, False)
-		self.firingPos = random.randint(self.screen.get_width()/3,self.screen.get_width()/3+self.screen.get_width()/3) 
 
+	self.firingPos = random.randint(self.screen.get_width()/3,self.screen.get_width()/3+self.screen.get_width()/3) 
 	self.helix.top = random.randint(self.screen.get_height()/2,self.screen.get_height()/2+self.screen.get_height()/3) * self.gfxscale
+	self.xpos = float(self.helix.left)
 
     def tick(self):
 	Enemy.tick(self)
-	self.helix.left += (self.xspeed * float(self.clock.get_time())) / 100
+	self.xpos += (self.xspeed * float(self.clock.get_time())) / 100.0
+	self.helix.left = self.xpos
 	if (self.xspeed > 0 and self.helix.left > self.screen.get_width()) or (self.xspeed < 0 and self.helix.left + self.heli.get_width() < 0):
 		self.resetPos()
 	self.screen.blit(self.heli, ( self.helix.left*self.gfxscale,self.helix.top*self.gfxscale), None)
@@ -48,9 +49,12 @@ class Panzer(Enemy):
 
     def heliDestroyed(self):
 	self.effects.addExplosion(self.helix.center, 1)
+	self.effects.playExplosion()
 	self.dead = True
 	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
 
     def fireGun(self):
 	self.effects.addExplosion([self.helix.center[0] - 20*self.gfxscale,self.helix.center[1] - 80*self.gfxscale] , 0.3)		
+	self.effects.playExplosion()
+	self.damageInflicted = 30
 
