@@ -1,0 +1,2 @@
+#!/bin/sh
+python ~/wiishooter/duckrehunt/SilentHunt.py

@@ -67,8 +67,8 @@ def main():
 		gun_pos, trigger = gun.get_pos()
 		#gun_pos[0] = int(gun_pos[0]*1060)+150
 		#gun_pos[1] = int(gun_pos[1]*400)+0
-		gun_pos[0] = gun_pos[0]
-		gun_pos[1] = gun_pos[1]
+		gun_pos[0] = int(gun_pos[0])
+		gun_pos[1] = int(gun_pos[1])
 
                  # Set the screen background
         	screen.fill((255,255,255))
