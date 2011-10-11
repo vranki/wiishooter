@@ -33,3 +33,6 @@ class Enemy:
     def getPoints(self):
 	return self.points
 
+    def getZ(self):
+	return 0
+

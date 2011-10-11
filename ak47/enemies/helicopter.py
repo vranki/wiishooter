@@ -12,7 +12,7 @@ class Helicopter(Enemy):
 	self.heli_orig = pygame.image.load('gfx/helicopter.png').convert_alpha()
 	self.helix = pygame.Rect(0, 0, self.heli_orig.get_width(), self.heli_orig.get_height())
 	self.heli_orig = self.scaleBitmap(self.heli_orig, self.gfxscale)
-	self.hitPoints = 5
+	self.hitPoints = 10
 	self.points = 500
 	self.resetPos()
 
@@ -47,4 +47,8 @@ class Helicopter(Enemy):
 	self.dead = True
 	self.helix.left=-self.heli.get_width()*self.gfxscale * 5
 	self.effects.playExplosion()
+
+    def getZ(self):
+	return self.helix.bottom
+
 

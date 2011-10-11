@@ -12,7 +12,7 @@ class Panzer(Enemy):
 	self.heli_orig = pygame.image.load('gfx/panzer.png').convert_alpha()
 	self.helix = pygame.Rect(0, 0, self.heli_orig.get_width(), self.heli_orig.get_height())
 	self.heli_orig = self.scaleBitmap(self.heli_orig, self.gfxscale)
-	self.hitPoints = 15
+	self.hitPoints = 30
 	self.points = 500
 	self.resetPos()
 
@@ -58,4 +58,8 @@ class Panzer(Enemy):
 	self.effects.addExplosion([self.helix.center[0] - 20*self.gfxscale,self.helix.center[1] - 80*self.gfxscale] , 0.3)		
 	self.effects.playExplosion()
 	self.damageInflicted = 30
+
+    def getZ(self):
+	return self.helix.bottom
+
 
