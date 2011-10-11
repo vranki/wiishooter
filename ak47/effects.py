@@ -17,7 +17,8 @@ class Effects(Enemy):
 	self.objects = []
 
 	self.gunSound = pygame.mixer.Sound('sounds/gun.wav')
-
+	self.explosionSound = pygame.mixer.Sound('sounds/explosion.wav')
+	self.screamSounds = [ pygame.mixer.Sound('sounds/scream.ogg'), pygame.mixer.Sound('sounds/scream2.ogg')]
 
     def tick(self):
 	Enemy.tick(self)
@@ -43,9 +44,17 @@ class Effects(Enemy):
 	pos = list(pos)
 	pos[0] = pos[0] - bmp[0].get_width() / 2
 	pos[1] = pos[1] - bmp[0].get_height() / 2
-
 	self.objects.append([pos, bmp, pygame.time.get_ticks(), time])
 
     def playGun(self):
 	self.gunSound.play()
+
+    def playEnemyGun(self):
+	self.gunSound.play()
+
+    def playExplosion(self):
+	self.explosionSound.play()
+
+    def playScream(self):
+	self.screamSounds[random.randint(0,len(self.screamSounds)-1)].play()
 
