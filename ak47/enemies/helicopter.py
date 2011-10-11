@@ -13,6 +13,7 @@ class Helicopter(Enemy):
 	self.helix = pygame.Rect(0, 0, self.heli_orig.get_width(), self.heli_orig.get_height())
 	self.heli_orig = self.scaleBitmap(self.heli_orig, self.gfxscale)
 	self.hitPoints = 5
+	self.points = 500
 	self.resetPos()
 
     def resetPos(self):

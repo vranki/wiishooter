@@ -11,6 +11,7 @@ class Enemy:
 	self.dead = False
 	self.hitPoints = 1
 	self.damageInflicted = 0
+	self.points = 0
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -28,4 +29,7 @@ class Enemy:
 	di = self.damageInflicted
 	self.damageInflicted = 0
 	return di
+
+    def getPoints(self):
+	return self.points
 

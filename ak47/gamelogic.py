@@ -5,6 +5,7 @@ from enemy import *
 sys.path.append("enemies")
 from helicopter import *
 from panzer import *
+from soldier import *
 from pygame.locals import *
 from effects import *
 
@@ -17,7 +18,9 @@ class GameLogic:
 	self.enemyAddInterval = 10000
 	self.font = pygame.font.Font(None, 25)
 	self.health = 100
+	self.score = 0
 	self.updateHealth()
+	self.updateScore()
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -40,17 +43,23 @@ class GameLogic:
 			self.health -= di
 			self.updateHealth()
 		if enemy.isDead():
+			self.score += enemy.getPoints()
+			self.updateScore()
 			self.enemies.remove(enemy)
 	self.effects.tick()
 	if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
 		self.addRandomEnemy()
 	self.screen.blit(self.healthText, [10,10])
+	self.screen.blit(self.scoreText, [10,40])
 
     def updateHealth(self):
 	if self.health > 0:
 		self.healthText = self.font.render("Health " + str(self.health),True,(0,0,0))
 	else:
-		self.healthText = self.font.render("MERTVYI")
+		self.healthText = self.font.render("MERTVYI",True,(0,0,0))
+
+    def updateScore(self):
+	self.scoreText = self.font.render("Score " + str(self.score),True,(0,0,0))
 
 # coords must be physical, unscaled pixels
     def shotFired(self, coords):
@@ -63,12 +72,15 @@ class GameLogic:
 		enemy.shotFired(scaledCoords)
 
     def addRandomEnemy(self):
-	enemyType = random.randint(0,1)
-#	enemyType = 0
-	if enemyType is 0:
+	enemyType = random.randint(0,100)
+#	enemyType = 2
+	if enemyType < 10:
 		enemy = Panzer(self.gfxscale, self.screen, self.clock, self.effects)
-	if enemyType is 1:
+	elif enemyType < 20:
 		enemy = Helicopter(self.gfxscale, self.screen, self.clock, self.effects)
+	else:
+		enemy = Soldier(self.gfxscale, self.screen, self.clock, self.effects)
+
 	self.enemies.append(enemy)
 	if self.enemyAddInterval > 1000:
 		self.enemyAddInterval = self.enemyAddInterval - 500

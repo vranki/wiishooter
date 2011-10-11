@@ -48,6 +48,9 @@ class Effects(Enemy):
     def playGun(self):
 	self.gunSound.play()
 
+    def playEnemyGun(self):
+	self.gunSound.play()
+
     def playExplosion(self):
 	self.explosionSound.play()
 
