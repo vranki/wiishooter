@@ -33,6 +33,7 @@ class Ak47:
         self.wiimote.rpt_mode = rpt_mode
 
         self.wiimote.enable(cwiid.FLAG_MESG_IFC)
+	self.vel_values = []
 
 
     def close(self):
@@ -86,7 +87,7 @@ class Ak47:
         return [int(ret_x*640), int(ret_y*480)], self.fire_button 
  
     def fire(self, on):
-	if on:
+	if not on:
             self.wiimote.led = 0
 	else:
 	    self.wiimote.led = cwiid.LED2_ON       
@@ -158,14 +159,34 @@ class Ak47:
 	return True
 
     def compensate(self):
-        comp = 30
+        comp = 2
 
         vel_vect = [self.cpoint[0] - self.old_cpoint[0], \
                     self.cpoint[1] - self.old_cpoint[1]]
+
+	#print vel_vect, self.cpoint, self.old_cpoint
+
         self.old_cpoint = self.cpoint[:]
 
-        self.cpoint = [self.cpoint[0] + vel_vect[0]*comp, \
-                       self.cpoint[1] + vel_vect[1]*comp]
+
+        # mean value filtering (low pass filter)
+        self.vel_values.append(vel_vect)
+
+        if len(self.vel_values) > 4:
+            self.vel_values.pop(0)
+ 
+	x_vel = 0
+	y_vel = 0
+
+        for vel in self.vel_values:
+		x_vel += vel[0]
+		y_vel += vel[1]             
+
+        x_vel = x_vel/len(self.vel_values)
+        y_vel = y_vel/len(self.vel_values)
+
+        self.cpoint = [self.cpoint[0] + x_vel*comp, \
+                       self.cpoint[1] + y_vel*comp]
 
       
     def center_point(self):
@@ -178,6 +199,8 @@ class Ak47:
 
         self.cpoint[0] = 1024 - (led1[0] + led2[0]) / 2.0
         self.cpoint[1] = (led1[1] + led2[1]) / 2.0
+	self.compensate()
+
 
     #distance to screen [cm]
     def calc_distance(self):

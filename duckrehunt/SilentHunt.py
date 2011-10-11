@@ -18,6 +18,7 @@ screen_dim = screen.get_rect()
 pygame.display.set_caption("Duck Rehunt: Reckoning")
 myAK = ak47.Ak47()
 myAK.load_calibration("full_screen_calib.txt")
+myAK.fire(False)
 pygame.mixer.init()
 pygame.mixer.Sound("Music.ogg").play(-1)
 
@@ -76,7 +77,7 @@ def gamePlay():
 	gun_pos, trigger = myAK.get_pos()
 	if trigger and time.time() - trigTime > 0.12:
                 trigTime = time.time()
-                myAK.fire(True)
+		#myAK.fire(True)
 		score -= 1
         	gunshot.play()
                 flash.add(Flash(myAK))
@@ -97,8 +98,8 @@ def gamePlay():
 
         scoreboard = myFont.render("Score: " + str(score), 1, (255,255,255))
 
-	if time.time() - trigTime > 0.05:
-            myAK.fire(False)
+	#if time.time() - trigTime > 0.05:
+ 	    #myAK.fire(False)
 
         if abs(timeLeft - 10.0) < 0.001:
             dSprites.add(Dog())
@@ -182,7 +183,7 @@ def welcomeScreen():
 
 	gun_pos, trigger = myAK.get_pos()
 	if trigger and time.time() - trigTime > 0.1:
-		myAK.fire(True)                
+		#myAK.fire(True)                
 		trigTime = time.time()
                 gunshot.play()
                 flash.add(Flash(myAK))
@@ -190,8 +191,8 @@ def welcomeScreen():
                 if gun_pos[0] < 600 and gun_pos[0] > 500 and gun_pos[1] > 380 and gun_pos[1] < 430:
                     keepGoing = False
 
-	if time.time() - trigTime > 0.05:
-            myAK.fire(False)
+	#if time.time() - trigTime > 0.05:
+            #myAK.fire(False)
 
         crosshair.clear(screen, background)
         flash.clear(screen, background)
@@ -290,7 +291,7 @@ def highScores(myScore):
 
 	gun_pos, trigger = myAK.get_pos()
 	if trigger and time.time() - trigTime > 0.1:
-		myAK.fire(True)
+		#myAK.fire(True)
                 trigTime = time.time()
                 gunshot.play()
                 flash.add(Flash(myAK))
@@ -298,8 +299,8 @@ def highScores(myScore):
                 if gun_pos[0] < 400 and gun_pos[0] > 300 and gun_pos[1] > 380 and gun_pos[1] < 430:
                     keepGoing = False
 
-	if time.time() - trigTime > 0.05:
-            myAK.fire(False)
+	#if time.time() - trigTime > 0.05:
+            #myAK.fire(False)
 
         crosshair.clear(screen, background)
         flash.clear(screen, background)
