@@ -8,6 +8,7 @@ class Ak47:
         self.ir_pos = []
         self.dist = 0 #distance to sensobar in cm
         self.cpoint = [0,0]
+	self.old_cpoint = self.cpoint[:]
         self.calib_points = []
         self.maxmin = []
         self.fire_button = False
@@ -20,7 +21,7 @@ class Ak47:
         
         self.wiimote = cwiid.Wiimote()
 	led = 0
-        led ^= cwiid.LED1_ON
+        led ^= cwiid.LED2_ON
         self.wiimote.led = led
 
         self.wiimote.mesg_callback = self.callback
@@ -32,6 +33,8 @@ class Ak47:
         self.wiimote.rpt_mode = rpt_mode
 
         self.wiimote.enable(cwiid.FLAG_MESG_IFC)
+	self.vel_values = []
+
 
     def close(self):
         self.wiimote.close()
@@ -54,12 +57,14 @@ class Ak47:
         self.calib_points = []
 
     def get_pos(self):
+	screen_reso = (1000,700)
+
         self.calc_distance()
         self.center_point()
 
         if not self.is_calibrated():
-            ret_x = self.cpoint[0] / 1024.0
-            ret_y = self.cpoint[1] / 768.0
+            ret_x = self.cpoint[0] / 1024.0*screen_reso[0]
+            ret_y = self.cpoint[1] / 768.0*screen_reso[1]
             return [ret_x, ret_y], self.fire_button
 
 	cent = (self.reso[0]/2, self.reso[1]/2)
@@ -81,8 +86,13 @@ class Ak47:
         ret_y = max([0.0, y_scaled])
         ret_y = min([1.0, ret_y])
 
-        return [ret_x, ret_y], self.fire_button 
-        
+        return [int(ret_x*screen_reso[0]), int(ret_y*screen_reso[1])], self.fire_button 
+ 
+    def fire(self, on):
+	if not on:
+            self.wiimote.led = 0
+	else:
+	    self.wiimote.led = cwiid.LED2_ON       
 
     def calibrate(self, calib_index):
         self.calc_distance()
@@ -142,8 +152,43 @@ class Ak47:
         if self.ir_pos[0] == None or self.ir_pos[1] == None or \
            self.ir_pos[2] != None or self.ir_pos[3] != None:
             return False
+
+	if self.ir_pos[0].has_key("pos") and self.ir_pos[1].has_key("pos"):
+	    pass
+	else:
+	    return False
 	
 	return True
+
+    def compensate(self):
+        comp = 2
+
+        vel_vect = [self.cpoint[0] - self.old_cpoint[0], \
+                    self.cpoint[1] - self.old_cpoint[1]]
+
+	#print vel_vect, self.cpoint, self.old_cpoint
+
+        self.old_cpoint = self.cpoint[:]
+
+
+        # mean value filtering (low pass filter)
+        self.vel_values.append(vel_vect)
+
+        if len(self.vel_values) > 4:
+            self.vel_values.pop(0)
+ 
+	x_vel = 0
+	y_vel = 0
+
+        for vel in self.vel_values:
+		x_vel += vel[0]
+		y_vel += vel[1]             
+
+        x_vel = x_vel/len(self.vel_values)
+        y_vel = y_vel/len(self.vel_values)
+
+        self.cpoint = [self.cpoint[0] + x_vel*comp, \
+                       self.cpoint[1] + y_vel*comp]
 
       
     def center_point(self):
@@ -156,6 +201,8 @@ class Ak47:
 
         self.cpoint[0] = 1024 - (led1[0] + led2[0]) / 2.0
         self.cpoint[1] = (led1[1] + led2[1]) / 2.0
+	self.compensate()
+
 
     #distance to screen [cm]
     def calc_distance(self):

@@ -18,10 +18,10 @@ def drawCalibrationStuff(screen, calibrationPhase):
         if(calibrationPhase==2):
                 text = font.render("Shoot bottom right",True,(0,0,0))
 
-                targetPos = [screen.get_width(), 0]
+                targetPos = [screen.get_width(), screen.get_height()]
         if(calibrationPhase==3):
                 text = font.render("Shoot top right",True,(0,0,0))
-                targetPos = [screen.get_width(), screen.get_height()]
+                targetPos = [screen.get_width(), 0]
 
         screen.blit(text, [250,250])
         drawCrosshairs(screen, (128,0,0), targetPos)
@@ -44,7 +44,7 @@ def main():
         print 'OK'
  
         # Set the height and width of the screen
-        size=[1360,768]
+        size=[1000,700]
         screen=pygame.display.set_mode(size, FULLSCREEN)
  
         pygame.display.set_caption("PYSSYTESTI")
@@ -67,8 +67,8 @@ def main():
 		gun_pos, trigger = gun.get_pos()
 		#gun_pos[0] = int(gun_pos[0]*1060)+150
 		#gun_pos[1] = int(gun_pos[1]*400)+0
-		gun_pos[0] = int(gun_pos[0]*1360)+0
-		gun_pos[1] = int(gun_pos[1]*768)+0
+		gun_pos[0] = int(gun_pos[0])
+		gun_pos[1] = int(gun_pos[1])
 
                  # Set the screen background
         	screen.fill((255,255,255))
@@ -86,7 +86,7 @@ def main():
 		old_trigger = trigger
 
         	drawCalibrationStuff(screen, calib_index)
-		pygame.draw.rect(screen, (0,0,0), (150,0,1060,400), 1)
+		#pygame.draw.rect(screen, (0,0,0), (150,0,1060,400), 1)
  
         	# Limit to 60 frames per second
         	clock.tick(60)
