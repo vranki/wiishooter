@@ -40,6 +40,15 @@ class menu:
         self.append_screen.upload_highscore(score)
         self.state = "append_score"
 
+class textarea:
+    def __init__(self, screen_size):
+        self.text_area = pygame.Surface((screen_size[0]-50, screen_size[1]-50))
+        self.text_area.fill((255,255,255))
+        self.text_area.set_alpha(200)
+
+    def update(self, screen, cursor):
+        screen.blit(self.text_area, (25,25))
+
 
 class appendscore:
     def __init__(self):
@@ -144,10 +153,11 @@ class appendscore:
             if self.new_name == "":
                 self.new_name = "Anonymous"
             self.save_to_scores(self.new_name, self.new_score)
-            return "high_scores"
-        return "append_score"
+            return "highscores"
+        return "appendscore"
 
     def save_to_scores(self, name, score):
+
         score_added = False
         for i in range(0,len(self.scores)):
             if self.scores[i][1] <= score:
@@ -169,22 +179,32 @@ class appendscore:
 
 
 class highscores:
-    def __init__(self, highlight, score_pos = 0):
+    def __init__(self):
+        title_font = pygame.font.Font(None, 40)
+        self.title = title_font.render("High scores", 1, (0,0,0))
+        self.scores = []
+
+        self.new_game_button = button((450,380), (150,50), "New Game")
+        self.menu_button = button((225,380), (150,50), "Main Menu")
+
+
+    def reload_scores(self, highlight, score_pos = 0):
+
         f = open("highscores.txt", "rb")
         score_list = pickle.load(f)
         f.close()
         self.score_pos = score_pos
         self.highlight = highlight
 
+	#print 'hs', self.highlight, self.score_pos
+
         list_len = len(score_list)
 
         text_font = pygame.font.Font(None, 22)
-        title_font = pygame.font.Font(None, 40)
-
-        self.title = title_font.render("High scores", 1, (0,0,0))
-        self.scores = []
 
         self.dots = text_font.render("...", 1, (0,0,0))
+
+        self.scores = []
 
         counter = 1
         for score in score_list:
@@ -206,13 +226,14 @@ class highscores:
             self.scores.append(one_score)
             counter += 1
 
-        self.new_game_button = button((450,380), (150,50), "New Game")
-        self.menu_button = button((225,380), (150,50), "Main Menu")
+
 
     def update(self, screen, cursor):
         screen.blit(self.title, (225,40))
         min_pos = 0
         max_pos = len(self.scores)
+
+	#print 'hs2', self.highlight, self.score_pos
 
         if not self.highlight or (self.highlight and self.score_pos < 11):
             for i in range(0,11):
@@ -239,14 +260,14 @@ class highscores:
         if self.new_game_button.update(screen, cursor, False):
             self.score_pos = 0
             self.highlight = False
-            return "new_game"
+            return "play"
         
         if self.menu_button.update(screen, cursor, False):
             self.score_pos = 0
             self.highlight = False
-            return "main_menu"
+            return "welcome"
 
-        return "high_scores"
+        return "highscores"
         
 
 class welcome:
@@ -254,15 +275,9 @@ class welcome:
         text_font = pygame.font.Font(None, 22)
         title_font = pygame.font.Font(None, 40)
         
-        self.title = title_font.render("DuckReHunt 3.0", 1, (0,0,0))
+        self.title = title_font.render("Game x", 1, (0,0,0))
         self.lines = []
-        self.lines.append(text_font.render("Duck hunt clone orginally developed by Michael Bachmann", 1, (0,0,0)))
-        self.lines.append(text_font.render("and heavily modified by Hackerspace 5w, Tampere (5w.fi)", 1, (0,0,0)))
-        self.lines.append(text_font.render("", 1, (0,0,0)))
-        self.lines.append(text_font.render("-You have 30 seconds to shoot down as many ducks as you can", 1, (0,0,0)))
-        self.lines.append(text_font.render("-Unlimited ammos, no reloads", 1, (0,0,0)))
-        self.lines.append(text_font.render("-Every bullet fired decreases points by one", 1, (0,0,0)))
-        self.lines.append(text_font.render("-For every duck killed you gain five points", 1, (0,0,0)))
+        self.lines.append(text_font.render("The game is created by Hackerspace 5w, Tampere (5w.fi)", 1, (0,0,0)))
         self.lines.append(text_font.render("-Use \"real\" sights as there is no virtual sight in the game", 1, (0,0,0)))
 
         self.new_game_button = button((450,380), (150,50), "New Game")
@@ -278,12 +293,12 @@ class welcome:
         #pygame.draw.circle(screen, (255,0,0), (200,200), 30)
 
         if self.new_game_button.update(screen, cursor, False):
-            return "new_game"
+            return "play"
 
         if self.high_scores_button.update(screen, cursor, False):
-            return "high_scores"
+            return "highscores"
 
-        return "main_menu"
+        return "welcome"
         
 
 class button:

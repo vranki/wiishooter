@@ -6,12 +6,21 @@ import pickle
 class Ak47:
     def __init__(self):
         self.ir_pos = []
+	self.volatile_ir_pos = []
+
+	self.volatile_acc_data = []
+	self.acc_data = []
+	self.reload_on = False
+
         self.dist = 0 #distance to sensobar in cm
         self.cpoint = [0,0]
 	self.old_cpoint = self.cpoint[:]
         self.calib_points = []
         self.maxmin = []
+
         self.fire_button = False
+	self.volatile_fire_button = False
+
         self.dist_values = []
 	self.reso = (1024,768) #wiimote
 
@@ -28,8 +37,8 @@ class Ak47:
 
 	rpt_mode = 0
         rpt_mode ^= cwiid.RPT_IR
-        self.wiimote.rpt_mode = rpt_mode
         rpt_mode ^= cwiid.RPT_BTN
+	rpt_mode ^= cwiid.RPT_ACC
         self.wiimote.rpt_mode = rpt_mode
 
         self.wiimote.enable(cwiid.FLAG_MESG_IFC)
@@ -58,6 +67,9 @@ class Ak47:
 
     def get_pos(self):
 	screen_reso = (1000,700)
+
+	self.ir_pos = self.volatile_ir_pos[:]
+	self.fire_button = self.volatile_fire_button
 
         self.calc_distance()
         self.center_point()
@@ -92,9 +104,30 @@ class Ak47:
 	if not on:
             self.wiimote.led = 0
 	else:
-	    self.wiimote.led = cwiid.LED2_ON       
+	    self.wiimote.led = cwiid.LED2_ON 
+
+
+    def reload_ak(self):
+	acc = self.volatile_acc_data[:]
+	if acc[0] < 140 and acc[0] > 110 and \
+           acc[1] > 143 and acc[1] < 155 and \
+           acc[2] < 143 and acc[2] > 125:
+
+            self.reload_on = True
+
+	if acc[0] < 105 or acc[0] > 145 or \
+           acc[1] < 138 or acc[2] > 147:
+
+	    self.reload_on = False
+
+        return self.reload_on
+
+    def get_acc_data(self):
+        return self.volatile_acc_data      
 
     def calibrate(self, calib_index):
+	self.ir_pos = self.volatile_ir_pos[:]
+
         self.calc_distance()
         self.center_point()
         temp_pos = copy.deepcopy(self.cpoint)
@@ -242,12 +275,16 @@ class Ak47:
         for mesg in mesg_list:      
             if mesg[0] == cwiid.MESG_BTN:
 		if mesg[1]==4:
-                    self.fire_button = True
+                    self.volatile_fire_button = True
 		if mesg[1]==0:
-                    self.fire_button = False
+                    self.volatile_fire_button = False
 		
             elif mesg[0] == cwiid.MESG_IR:
-                self.ir_pos = mesg[1]
+                self.volatile_ir_pos = mesg[1]
+
+	    elif mesg[0] == cwiid.MESG_ACC:
+		self.volatile_acc_data = mesg[1]
+
  
             elif mesg[0] ==  cwiid.MESG_ERROR:
                 print "Wiimote: Error message received"

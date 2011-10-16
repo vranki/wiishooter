@@ -5,6 +5,7 @@ import time
 import gamelogic
 import ak47
 from pygame.locals import *
+import menusystem
  
 def main():
         pygame.init()
@@ -29,6 +30,14 @@ def main():
 	game = gamelogic.GameLogic()
 	game.init(screen, clock)
 
+	textArea = menusystem.textarea(size)
+	highScores = menusystem.highscores()
+	highScores.reload_scores(False)
+	appendScore = menusystem.appendscore()
+	welcomeScreen = menusystem.welcome()
+
+	gameState = 'welcome'
+
 	trigTime = time.time()
         exit = False
         while not exit:
@@ -51,7 +60,33 @@ def main():
  
         	# Limit to 60 frames per second
         	clock.tick(60)
-		game.tick() 
+
+		gameEnded, score = game.tick() 
+
+		cursor = [gun_pos[0], gun_pos[1], trigger]
+
+		if gameState == 'play' and gameEnded:
+			gameState = 'appendscore'
+			appendScore.upload_highscore(score)
+
+		elif gameState == 'appendscore':
+			textArea.update(screen, cursor)
+			gameState = appendScore.update(screen, cursor)
+			if gameState == 'highscores':
+				highScores.reload_scores(True, appendScore.score_pos())
+
+		elif gameState == 'highscores':
+			textArea.update(screen, cursor)
+			gameState = highScores.update(screen, cursor)
+			if gameState == 'play':
+				game.initNewGame()
+
+		elif gameState == 'welcome':
+			textArea.update(screen, cursor)
+			gameState = welcomeScreen.update(screen, cursor)
+			if gameState == 'play':
+				game.initNewGame()
+
         	# Go ahead and update the screen with what we've drawn.
          	pygame.display.update()
 

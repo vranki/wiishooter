@@ -15,5 +15,9 @@ class Ak47:
     def fire(self, trig):
         pass
 
+    def reload_ak(self):
+        buttons = pygame.mouse.get_pressed()
+        return buttons[2] 
+
     def close(self):
         pass

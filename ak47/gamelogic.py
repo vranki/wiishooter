@@ -18,6 +18,7 @@ class GameLogic:
 	self.lastEnemyAddedTime = pygame.time.get_ticks()
 	self.enemyAddInterval = 3000
 	self.font = pygame.font.Font(None, 25)
+	self.gameEnded = True
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -28,11 +29,15 @@ class GameLogic:
 	self.gfxscale = float(self.screen.get_width()) / 1360.0
 	self.bg = self.scaleBitmap(self.bg, self.gfxscale)
 	self.effects = Effects(self.gfxscale, self.screen, self.clock)
-    	self.resetGame()
+    	self.initNewGame()
 
     def tick(self):
 	curtime = pygame.time.get_ticks()
 	self.screen.blit(self.bg, (0,0))
+
+	if self.gameEnded:
+		return self.gameEnded, self.score
+
 	zs = []
 	for enemy in self.enemies:
 		zs.append([enemy.getZ(), enemy])
@@ -57,11 +62,14 @@ class GameLogic:
 		self.addRandomEnemy()
 
 	if self.health==0:
-		self.screen.fill([128,0,0,128])
-		if pygame.time.get_ticks() > self.deathTime + 5000:
-			self.resetGame()
+		self.enemies = []
+		self.gameEnded = True
+
 	self.screen.blit(self.healthText, [10,10])
 	self.screen.blit(self.scoreText, [10,40])
+
+        return self.gameEnded, self.score
+
 
     def updateHealth(self):
 	if self.health != 0:
@@ -102,7 +110,8 @@ class GameLogic:
     def close(self):
 	pass
 
-    def resetGame(self):
+    def initNewGame(self):
+	self.gameEnded = False
 	self.health = 100
 	self.score = 0
 	self.updateHealth()
