@@ -25,14 +25,14 @@ def main():
  		if param == 'fullscreen':
 			fullscreen = True
 
+	size=[0,0]
 	if fullscreen:
 	        screen=pygame.display.set_mode(size, FULLSCREEN)
 	else:
 	        # Set the height and width of the screen
         	size=[1024,764]
 		# for native size
-       		# size=[0,0]
-        screen=pygame.display.set_mode(size)
+		screen=pygame.display.set_mode(size)
 	if myAK is None:
 		myAK = Ak47Mouse() 
         pygame.display.set_caption("WiiShooter")
@@ -43,7 +43,7 @@ def main():
 	game = gamelogic.GameLogic()
 	game.init(screen, clock)
 
-	textArea = menusystem.textarea(size)
+	textArea = menusystem.textarea([screen.get_width(), screen.get_height()])
 	highScores = menusystem.highscores()
 	highScores.reload_scores(False)
 	appendScore = menusystem.appendscore()
