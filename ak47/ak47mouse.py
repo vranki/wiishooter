@@ -1,6 +1,7 @@
 import pygame
+from ak47 import Ak47
 
-class Ak47:
+class Ak47Mouse(Ak47):
     def __init__(self):
         pass
 

@@ -3,7 +3,9 @@ import sys
 import pygame
 import time
 import gamelogic
-import ak47
+from ak47 import Ak47
+from ak47mouse import Ak47Mouse
+from ak47wiimote import Ak47Wiimote
 from pygame.locals import *
 import menusystem
  
@@ -11,17 +13,28 @@ def main():
         pygame.init()
         pygame.mixer.init()
  	gun = None
-        print 'Put ak47 in discoverable mode now (press connection button)...'
-    	myAK = ak47.Ak47()
-    	myAK.load_calibration("full_screen_calib.txt")
-        print 'OK'
- 
-        # Set the height and width of the screen
-        size=[1000,700]
-	# for native size
-       	# size=[0,0]
-        screen=pygame.display.set_mode(size, FULLSCREEN)
- 
+	fullscreen = False
+	myAK = None
+	# PARAMS: wiimote (use wiimote) fullscreen (guess)
+	for param in sys.argv:
+		if param == 'wiimote':
+		        print 'Put ak47 in discoverable mode now (press connection button)...'
+    			myAK = Ak47Wiimote()
+    			myAK.load_calibration("full_screen_calib.txt")
+        		print 'OK'
+ 		if param == 'fullscreen':
+			fullscreen = True
+
+	if fullscreen:
+	        screen=pygame.display.set_mode(size, FULLSCREEN)
+	else:
+	        # Set the height and width of the screen
+        	size=[1024,764]
+		# for native size
+       		# size=[0,0]
+        screen=pygame.display.set_mode(size)
+	if myAK is None:
+		myAK = Ak47Mouse() 
         pygame.display.set_caption("WiiShooter")
  
         # Used to manage how fast the screen updates
@@ -48,16 +61,16 @@ def main():
 				exit=True
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 				pass
+		if myAK is not None:
+			gun_pos, trigger = myAK.get_pos()
+			if trigger and time.time() - trigTime > 0.12:
+				trigTime = time.time()
+				myAK.fire(True)
+				game.shotFired(gun_pos)
 
-        	gun_pos, trigger = myAK.get_pos()
-        	if trigger and time.time() - trigTime > 0.12:
-                	trigTime = time.time()
-                	myAK.fire(True)
-			game.shotFired(gun_pos)
+			if time.time() - trigTime > 0.05:
+		    		myAK.fire(False)
 
-        	if time.time() - trigTime > 0.05:
-            		myAK.fire(False)
- 
         	# Limit to 60 frames per second
         	clock.tick(60)
 

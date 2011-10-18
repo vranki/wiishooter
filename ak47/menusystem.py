@@ -52,9 +52,13 @@ class textarea:
 
 class appendscore:
     def __init__(self):
-        f = open("highscores.txt", "rb")
-        self.scores = pickle.load(f)
-        f.close()
+	self.scores = []
+	try:
+	        f = open("highscores.txt", "rb")
+        	self.scores = pickle.load(f)
+        	f.close()
+	except IOError:
+		print 'No highscores yet'
         
         self.new_score = 0
         self.new_score_pos = 0
@@ -189,10 +193,14 @@ class highscores:
 
 
     def reload_scores(self, highlight, score_pos = 0):
+	score_list = []
+	try:
+	        f = open("highscores.txt", "rb")
+        	score_list = pickle.load(f)
+        	f.close()
+	except IOError:
+		print 'No highscores yet'
 
-        f = open("highscores.txt", "rb")
-        score_list = pickle.load(f)
-        f.close()
         self.score_pos = score_pos
         self.highlight = highlight
 
@@ -244,6 +252,7 @@ class highscores:
                     
         elif self.highlight and self.score_pos > 10:
             for i in range(0,5):
+
                 if i < max_pos and i >= min_pos:
                     screen.blit(self.scores[i][0], (175,110+i*20))
                     screen.blit(self.scores[i][1], (215,110+i*20))
