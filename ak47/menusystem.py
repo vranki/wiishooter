@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+# -*- coding: utf-8 -*-
 import pygame
 import pickle
 import string
@@ -72,8 +72,8 @@ class appendscore:
         self.done_button = button((225,380), (150,50), "Done")
 
         but_list0 = ["1","2","3","4","5","6","7","8","9","0"]
-        but_list1 = ["q","w","e","r","t","y","u","i","o","p","å","^"]
-        but_list2 = ["a","s","d","f","g","h","j","k","l","ö","ä","'"]
+        but_list1 = ["q","w","e","r","t","y","u","i","o","p","Ã¥","^"]
+        but_list2 = ["a","s","d","f","g","h","j","k","l","Ã¶","Ã¤","'"]
         but_list3 = ["z","x","c","v","b","n","m",",",".","-","_"]
         
         self.char_buttons = []

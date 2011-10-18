@@ -35,6 +35,7 @@ def main():
 		screen=pygame.display.set_mode(size)
 	if myAK is None:
 		myAK = Ak47Mouse() 
+	myAK.fire(False)
         pygame.display.set_caption("WiiShooter")
  
         # Used to manage how fast the screen updates
@@ -53,6 +54,7 @@ def main():
 
 	trigTime = time.time()
         exit = False
+	reloading = False
         while not exit:
                 for event in pygame.event.get(): # User did something
                         if event.type == pygame.QUIT: # If user clicked close
@@ -61,16 +63,21 @@ def main():
 				exit=True
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 				pass
-		if myAK is not None:
-			gun_pos, trigger = myAK.get_pos()
-			if trigger and time.time() - trigTime > 0.12:
-				trigTime = time.time()
-				myAK.fire(True)
-				game.shotFired(gun_pos)
 
-			if time.time() - trigTime > 0.05:
-		    		myAK.fire(False)
+		gun_pos, trigger = myAK.get_pos()
+		if trigger and time.time() - trigTime > 0.12:
+			trigTime = time.time()
+#			if game.gunCanFire():
+			myAK.fire(True)
+			game.shotFired(gun_pos)
 
+		if time.time() - trigTime > 0.05:
+	    		myAK.fire(False)
+
+		newReloading = myAK.reload_ak()
+		if reloading is not newReloading:
+			reloading = newReloading
+			game.reloading(reloading)
         	# Limit to 60 frames per second
         	clock.tick(60)
 
