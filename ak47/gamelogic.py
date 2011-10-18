@@ -50,6 +50,7 @@ class GameLogic:
 		di = enemy.getDamageInflicted()
 		if di > 0:
 			self.health -= di
+			self.effects.showPain(di*50)
 			self.updateHealth()
 			if self.health <= 0:
 				self.playerDied()
@@ -63,6 +64,7 @@ class GameLogic:
 		self.addRandomEnemy()
 
 	if self.health==0:
+		self.effects.showPain(100)
 		self.enemies = []
 		self.gameEnded = True
 
@@ -97,8 +99,8 @@ class GameLogic:
 	for enemy in self.enemies:
 		enemy.shotFired(scaledCoords)
 	self.ammo -= 1
-	if self.ammo == 0:
-		print "Reload!!"
+	if self.ammo <= 0:
+		self.ammo = 0
 
     def addRandomEnemy(self):
 	enemyType = random.randint(0,100)

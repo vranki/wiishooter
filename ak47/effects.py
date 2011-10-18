@@ -14,12 +14,15 @@ class Effects(Enemy):
 	self.explosion_s = self.scaleBitmap(self.explosion_s, self.gfxscale)
 	self.explosion_e = pygame.image.load('gfx/explosion_end.png').convert_alpha()
 	self.explosion_e = self.scaleBitmap(self.explosion_e, self.gfxscale)
+	self.pain = pygame.image.load('gfx/pain.png').convert_alpha()
+	self.pain = self.scaleBitmap(self.pain, self.gfxscale)
 	self.objects = []
 
 	self.gunSound = pygame.mixer.Sound('sounds/gun.wav')
 	self.explosionSound = pygame.mixer.Sound('sounds/explosion.wav')
 	self.screamSounds = [ pygame.mixer.Sound('sounds/scream.ogg'), pygame.mixer.Sound('sounds/scream2.ogg')]
 	self.reloadSound = pygame.mixer.Sound('sounds/reload.wav')
+	self.painEndTime = 0
 
     def tick(self):
 	Enemy.tick(self)
@@ -36,6 +39,8 @@ class Effects(Enemy):
 		self.screen.blit(bmp, [obj[0][0] * self.gfxscale, obj[0][1] * self.gfxscale], None)
 		if age > obj[3]:
 			self.objects.remove(obj)
+	if curtime < self.painEndTime:
+		self.screen.blit(self.pain, [0,0], None)
 		
     def addExplosion(self, pos, scale, time=500):
 	bmp = []
@@ -61,4 +66,7 @@ class Effects(Enemy):
 
     def playScream(self):
 	self.screamSounds[random.randint(0,len(self.screamSounds)-1)].play()
+
+    def showPain(self, time):
+	self.painEndTime = pygame.time.get_ticks() + time
 

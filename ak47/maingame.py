@@ -35,7 +35,6 @@ def main():
 		screen=pygame.display.set_mode(size)
 	if myAK is None:
 		myAK = Ak47Mouse() 
-	myAK.fire(False)
         pygame.display.set_caption("WiiShooter")
  
         # Used to manage how fast the screen updates
@@ -55,6 +54,7 @@ def main():
 	trigTime = time.time()
         exit = False
 	reloading = False
+	myAK.fire(False)
         while not exit:
                 for event in pygame.event.get(): # User did something
                         if event.type == pygame.QUIT: # If user clicked close

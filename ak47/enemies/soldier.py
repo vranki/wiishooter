@@ -66,9 +66,9 @@ class Soldier(Enemy):
 
 	if self.shootingStarted > 0: 
 		frame = self.frames[4]
-		if self.shootingStarted < currtime - 400 and self.timeOfDeath == 0 and self.gunFired==False:
+		if self.shootingStarted < currtime - 800 and self.timeOfDeath == 0 and self.gunFired==False:
 			self.fireGun()
-		if self.shootingStarted < currtime - 500 and self.timeOfDeath == 0:
+		if self.shootingStarted < currtime - 1200 and self.timeOfDeath == 0:
 			self.shootingStarted = 0
 			self.xspeed = float(random.randint(10,15))
 			self.yspeed = float(random.randint(-3,3))
@@ -83,7 +83,7 @@ class Soldier(Enemy):
 
 	self.screen.blit(frame, ( self.helix.left*self.gfxscale,self.helix.top*self.gfxscale), None)
 
-	if self.shootingStarted == 0 and random.randint(0,100)==42 and self.timeOfDeath == 0:
+	if self.shootingStarted == 0 and random.randint(0,200)==42 and self.timeOfDeath == 0:
 		self.shootingStarted = pygame.time.get_ticks()
 		self.xspeed = 0
 		self.yspeed = 0
