@@ -28,14 +28,14 @@ class Soldier(Enemy):
 
     def resetPos(self):
 	if(random.random() > 0.5):
-		self.xspeed = float(random.randint(10,15))
+		self.xspeed = float(random.randint(20,40))
 		self.helix.left=-self.frames[0].get_width()*self.gfxscale * 5
 		self.heli = self.frames[0]
 	else:
 		self.xspeed = float(random.randint(-15,-10))
 		self.helix.left=self.screen.get_width() + self.frames[0].get_width()*self.gfxscale * 5
 		self.heli = pygame.transform.flip(self.frames[0], True, False)
-	self.yspeed = float(random.randint(-3,3))
+	self.yspeed = float(random.randint(-5,5))
 
 	self.firingPos = random.randint(self.screen.get_width()/3,self.screen.get_width()/3+self.screen.get_width()/3) 
 	self.helix.top = random.randint(self.screen.get_height()/2,self.screen.get_height()/2+self.screen.get_height()/3) * self.gfxscale
@@ -70,8 +70,8 @@ class Soldier(Enemy):
 			self.fireGun()
 		if self.shootingStarted < currtime - 1200 and self.timeOfDeath == 0:
 			self.shootingStarted = 0
-			self.xspeed = float(random.randint(10,15))
-			self.yspeed = float(random.randint(-3,3))
+			self.xspeed = float(random.randint(20,40))
+			self.yspeed = float(random.randint(-5,5))
 
 	if self.timeOfDeath > 0:
 		frame = self.frames[5]
@@ -109,7 +109,7 @@ class Soldier(Enemy):
 	self.effects.playScream()
 
     def fireGun(self):
-	self.effects.addExplosion(self.helix.center, 0.03)
+	self.effects.addExplosion(self.helix.center, 0.1)
 	self.effects.playEnemyGun()
 	self.gunFired=True
 	if random.randint(0,10) < 3:
