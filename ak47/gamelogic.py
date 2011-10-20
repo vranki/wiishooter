@@ -17,7 +17,7 @@ class GameLogic:
 	self.reloadImage = pygame.image.load('gfx/reload.png').convert_alpha()
 	self.gfxscale = 1.0
 	self.lastEnemyAddedTime = pygame.time.get_ticks()
-	self.enemyAddInterval = 3000
+	self.enemyAddInterval = 6000
 	self.font = pygame.font.Font(None, 25)
 	self.gameEnded = True
 
@@ -105,9 +105,9 @@ class GameLogic:
     def addRandomEnemy(self):
 	enemyType = random.randint(0,100)
 #	enemyType = 2
-	if enemyType < 10:
+	if enemyType < 20:
 		enemy = Panzer(self.gfxscale, self.screen, self.clock, self.effects)
-	elif enemyType < 20:
+	elif enemyType < 50:
 		enemy = Helicopter(self.gfxscale, self.screen, self.clock, self.effects)
 	else:
 		enemy = Soldier(self.gfxscale, self.screen, self.clock, self.effects)

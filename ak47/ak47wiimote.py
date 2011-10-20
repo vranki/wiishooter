@@ -67,7 +67,7 @@ class Ak47Wiimote(Ak47):
         self.calib_points = []
 
     def get_pos(self):
-	screen_reso = (1000,700)
+	screen_reso = (1360,768)
 
 	self.ir_pos = self.volatile_ir_pos[:]
 	self.fire_button = self.volatile_fire_button
@@ -195,7 +195,7 @@ class Ak47Wiimote(Ak47):
 	return True
 
     def compensate(self):
-        comp = 2
+        comp = 1.5
 
         vel_vect = [self.cpoint[0] - self.old_cpoint[0], \
                     self.cpoint[1] - self.old_cpoint[1]]
@@ -235,7 +235,7 @@ class Ak47Wiimote(Ak47):
 
         self.cpoint[0] = 1024 - (led1[0] + led2[0]) / 2.0
         self.cpoint[1] = (led1[1] + led2[1]) / 2.0
-	self.compensate()
+	#self.compensate()
 
 
     #distance to screen [cm]

@@ -79,7 +79,7 @@ def main():
 			reloading = newReloading
 			game.reloading(reloading)
         	# Limit to 60 frames per second
-        	clock.tick(60)
+        	clock.tick(30)
 
 		gameEnded, score = game.tick() 
 

@@ -257,7 +257,7 @@ class highscores:
                     screen.blit(self.scores[i][0], (350,210+i*30))
                     screen.blit(self.scores[i][1], (530,210+i*30))
                     screen.blit(self.scores[i][2], (905,210+i*30))
-            screen.blit(self.dots, (215,110+5*20))
+            screen.blit(self.dots, (360,210+5*30))
             count = 6
             for i in range(self.score_pos-3,self.score_pos+2):
                 if i < max_pos and i >= min_pos:
