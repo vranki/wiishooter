@@ -8,6 +8,7 @@ from helicopter import *
 from panzer import *
 from soldier import *
 from barrel import *
+from medikit import *
 from pygame.locals import *
 from effects import *
 
@@ -48,9 +49,12 @@ class GameLogic:
 		enemy = enemyPair[1]
 		enemy.tick()
 		di = enemy.getDamageInflicted()
-		if di > 0:
+		if(di != 0):
 			self.health -= di
-			self.effects.showPain(di*50)
+			if di > 0:
+				self.effects.showPain(di*50)
+			if self.health > 100:
+				self.health = 100
 			self.updateHealth()
 			if self.health <= 0:
 				self.playerDied()
@@ -60,8 +64,16 @@ class GameLogic:
 			self.enemies.remove(enemy)
 
 	self.effects.tick()
-	if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
-		self.addRandomEnemy()
+
+	if self.wave % 2==0:
+		if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
+			self.addRandomEnemy()
+	if self.waveStart + 10000 < curtime:
+		self.wave +=1
+		self.waveStart = curtime
+		print 'Start wave ' + str(self.wave)
+		if self.wave % 5==0:
+			self.enemies.append(Medikit(self.gfxscale, self.screen, self.clock, self.effects))
 
 	if self.health==0:
 		self.effects.showPain(100)
@@ -74,7 +86,6 @@ class GameLogic:
 	self.screen.blit(self.scoreText, [10,40])
 
         return self.gameEnded, self.score
-
 
     def updateHealth(self):
 	if self.health != 0:
@@ -125,12 +136,15 @@ class GameLogic:
 	self.health = 100
 	self.score = 0
 	self.ammo = 30
+	self.wave = 0
+	self.waveStart = pygame.time.get_ticks()
 	self.updateHealth()
 	self.updateScore()
 	self.enemies = []
 	for i in range(0,5): 
 		self.addRandomEnemy()
 		self.enemies.append(Barrel(self.gfxscale, self.screen, self.clock, self.effects))
+
 	self.screen.fill([0,0,0])
 	self.deathTime = 0
 
