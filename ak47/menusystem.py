@@ -42,12 +42,12 @@ class menu:
 
 class textarea:
     def __init__(self, screen_size):
-        self.text_area = pygame.Surface((screen_size[0]-50, screen_size[1]-50))
+        self.text_area = pygame.Surface((screen_size[0]-100, screen_size[1]-100))
         self.text_area.fill((255,255,255))
         self.text_area.set_alpha(200)
 
     def update(self, screen, cursor):
-        screen.blit(self.text_area, (25,25))
+        screen.blit(self.text_area, (50,50))
 
 
 class appendscore:
@@ -63,13 +63,13 @@ class appendscore:
         self.new_score = 0
         self.new_score_pos = 0
 
-        text_font = pygame.font.Font(None, 22)
-        title_font = pygame.font.Font(None, 40)
+        text_font = pygame.font.Font(None, 35)
+        title_font = pygame.font.Font(None, 80)
 
         self.title = title_font.render("Game Over", 1, (0,0,0))
         self.body_text1 = text_font.render("You got " + str(self.new_score) + " points. Give your name/nick, please", 1, (0,0,0))
 
-        self.done_button = button((225,380), (150,50), "Done")
+        self.done_button = button((450,590), (300,80), "Done")
 
         but_list0 = ["1","2","3","4","5","6","7","8","9","0"]
         but_list1 = ["q","w","e","r","t","y","u","i","o","p","å","^"]
@@ -77,33 +77,33 @@ class appendscore:
         but_list3 = ["z","x","c","v","b","n","m",",",".","-","_"]
         
         self.char_buttons = []
-        x_pos = 130
-        y_pos = 180
+        x_pos = 320
+        y_pos = 300
         for char in but_list0:
-            self.char_buttons.append([button((x_pos, y_pos), (30,30), char), char])
-            x_pos += 30
+            self.char_buttons.append([button((x_pos, y_pos), (45,45), char), char])
+            x_pos += 45
 
-        x_pos = 145
-        y_pos = 210
+        x_pos = 350
+        y_pos = 345
         for char in but_list1:
-            self.char_buttons.append([button((x_pos, y_pos), (30,30), char), char])
-            x_pos += 30
+            self.char_buttons.append([button((x_pos, y_pos), (45,45), char), char])
+            x_pos += 45
 
-        x_pos = 160
-        y_pos = 240
+        x_pos = 370
+        y_pos = 390
         for char in but_list2:
-            self.char_buttons.append([button((x_pos, y_pos), (30,30), char), char])
-            x_pos += 30
+            self.char_buttons.append([button((x_pos, y_pos), (45,45), char), char])
+            x_pos += 45
 
-        x_pos = 175
-        y_pos = 270
+        x_pos = 400
+        y_pos = 435
         for char in but_list3:
-            self.char_buttons.append([button((x_pos, y_pos), (30,30), char), char])
-            x_pos += 30
+            self.char_buttons.append([button((x_pos, y_pos), (45,45), char), char])
+            x_pos += 45
 
-        self.space = button((225,310), (150,30), "")
-        self.caps = button((100,240), (60,30), "Caps")
-        self.backspace = button((430,180), (60,30), "<-")
+        self.space = button((450,500), (300,45), "")
+        self.caps = button((280,390), (90,45), "Caps")
+        self.backspace = button((770,300), (90,45), "<-")
 
         self.caps_state = False
         self.new_name = ""
@@ -112,13 +112,13 @@ class appendscore:
         
     def upload_highscore(self, score):
         self.new_score = score
-        text_font = pygame.font.Font(None, 22)
+        text_font = pygame.font.Font(None, 35)
         self.body_text1 = text_font.render("You got " + str(self.new_score) + " points. Give your name/nick, please", 1, (0,0,0))
         self.new_name = ""
 
     def update(self, screen, cursor):
-        screen.blit(self.title, (225,40))
-        screen.blit(self.body_text1, (105,90))
+        screen.blit(self.title, (450,80))
+        screen.blit(self.body_text1, (270,180))
 
         if self.caps.update(screen, cursor, self.caps_state):
             if self.caps_state:
@@ -139,13 +139,13 @@ class appendscore:
                 else:
                     self.new_name += but[1]
 
-        text_font = pygame.font.Font(None, 30)
+        text_font = pygame.font.Font(None, 50)
         pleijah = text_font.render(self.new_name, 1, (0,0,0))
         pw = pleijah.get_width()
-        screen.blit(pleijah, (295-pw/2,145))
+        screen.blit(pleijah, (590-pw/2,230))
 
         if self.count < 30:
-            pygame.draw.line(screen, (0,0,0), (297+pw/2, 145), (297+pw/2, 163), 3)
+            pygame.draw.line(screen, (0,0,0), (590+pw/2, 270), (610+pw/2, 270), 3)
 
         self.count += 1
         if self.count > 60:
@@ -184,12 +184,12 @@ class appendscore:
 
 class highscores:
     def __init__(self):
-        title_font = pygame.font.Font(None, 40)
+        title_font = pygame.font.Font(None, 75)
         self.title = title_font.render("High scores", 1, (0,0,0))
         self.scores = []
 
-        self.new_game_button = button((450,380), (150,50), "New Game")
-        self.menu_button = button((225,380), (150,50), "Main Menu")
+        self.new_game_button = button((900,590), (300,80), "New Game")
+        self.menu_button = button((450,590), (300,80), "Main Menu")
 
 
     def reload_scores(self, highlight, score_pos = 0):
@@ -208,7 +208,7 @@ class highscores:
 
         list_len = len(score_list)
 
-        text_font = pygame.font.Font(None, 22)
+        text_font = pygame.font.Font(None, 30)
 
         self.dots = text_font.render("...", 1, (0,0,0))
 
@@ -237,7 +237,7 @@ class highscores:
 
 
     def update(self, screen, cursor):
-        screen.blit(self.title, (225,40))
+        screen.blit(self.title, (450,80))
         min_pos = 0
         max_pos = len(self.scores)
 
@@ -246,24 +246,24 @@ class highscores:
         if not self.highlight or (self.highlight and self.score_pos < 11):
             for i in range(0,11):
                 if i < max_pos and i >= min_pos:
-                    screen.blit(self.scores[i][0], (175,110+i*20))
-                    screen.blit(self.scores[i][1], (215,110+i*20))
-                    screen.blit(self.scores[i][2], (405,110+i*20))
+                    screen.blit(self.scores[i][0], (350,210+i*30))
+                    screen.blit(self.scores[i][1], (530,210+i*30))
+                    screen.blit(self.scores[i][2], (905,210+i*30))
                     
         elif self.highlight and self.score_pos > 10:
             for i in range(0,5):
 
                 if i < max_pos and i >= min_pos:
-                    screen.blit(self.scores[i][0], (175,110+i*20))
-                    screen.blit(self.scores[i][1], (215,110+i*20))
-                    screen.blit(self.scores[i][2], (405,110+i*20))
+                    screen.blit(self.scores[i][0], (350,210+i*30))
+                    screen.blit(self.scores[i][1], (530,210+i*30))
+                    screen.blit(self.scores[i][2], (905,210+i*30))
             screen.blit(self.dots, (215,110+5*20))
             count = 6
             for i in range(self.score_pos-3,self.score_pos+2):
                 if i < max_pos and i >= min_pos:
-                    screen.blit(self.scores[i][0], (175,110+count*20))
-                    screen.blit(self.scores[i][1], (215,110+count*20))
-                    screen.blit(self.scores[i][2], (405,110+count*20))
+                    screen.blit(self.scores[i][0], (350,210+count*30))
+                    screen.blit(self.scores[i][1], (530,210+count*30))
+                    screen.blit(self.scores[i][2], (905,210+count*30))
                 count += 1
 
         if self.new_game_button.update(screen, cursor, False):
@@ -281,23 +281,26 @@ class highscores:
 
 class welcome:
     def __init__(self):
-        text_font = pygame.font.Font(None, 22)
-        title_font = pygame.font.Font(None, 40)
+        text_font = pygame.font.Font(None, 35)
+        title_font = pygame.font.Font(None, 70)
         
-        self.title = title_font.render("Game x", 1, (0,0,0))
+        self.title = title_font.render("AK47 World Tour 1984", 1, (0,0,0))
         self.lines = []
         self.lines.append(text_font.render("The game is created by Hackerspace 5w, Tampere (5w.fi)", 1, (0,0,0)))
+	self.lines.append(text_font.render("", 1, (0,0,0)))
         self.lines.append(text_font.render("-Use \"real\" sights as there is no virtual sight in the game", 1, (0,0,0)))
+	self.lines.append(text_font.render("-You have 30 rounds in one magazine, after that reload is needed", 1, (0,0,0)))
+	self.lines.append(text_font.render("-Make your motherland proud!", 1, (0,0,0)))
 
-        self.new_game_button = button((450,380), (150,50), "New Game")
-        self.high_scores_button = button((225,380), (150,50), "High Scores")
+        self.new_game_button = button((900,590), (300,80), "New Game")
+        self.high_scores_button = button((450,590), (300,80), "High Scores")
 
     def update(self, screen, cursor):
-        screen.blit(self.title, (200,40))
-        lpos = 110
+        screen.blit(self.title, (400,80))
+        lpos = 220
         for line in self.lines:
-            screen.blit(line, (45,lpos))
-            lpos += 20
+            screen.blit(line, (150,lpos))
+            lpos += 40
 
         #pygame.draw.circle(screen, (255,0,0), (200,200), 30)
 
@@ -314,7 +317,7 @@ class button:
     def __init__(self, pos, size, text):
         self.pos = pos
         self.size = size
-        font = pygame.font.SysFont(None, 22)
+        font = pygame.font.SysFont(None, 35)
         font.set_bold(True)
         self.text = font.render(text, 1, (0,0,0))
         tsize = self.text.get_size()

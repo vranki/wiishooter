@@ -30,7 +30,7 @@ def main():
 	        screen=pygame.display.set_mode(size, FULLSCREEN)
 	else:
 	        # Set the height and width of the screen
-        	size=[1024,764]
+        	size=[1360,764]
 		# for native size
 		screen=pygame.display.set_mode(size)
 	if myAK is None:
@@ -106,6 +106,10 @@ def main():
 			gameState = welcomeScreen.update(screen, cursor)
 			if gameState == 'play':
 				game.initNewGame()
+
+		if gameState != 'play':
+			pygame.draw.circle(screen, (255,0,0), gun_pos, 5, 0) 
+
 
         	# Go ahead and update the screen with what we've drawn.
          	pygame.display.update()
