@@ -67,8 +67,8 @@ def main():
 		gun_pos, trigger = myAK.get_pos()
 		if trigger and time.time() - trigTime > 0.12:
 			trigTime = time.time()
-#			if game.gunCanFire():
-			myAK.fire(True)
+			if game.gunCanFire():
+				myAK.fire(True)
 			game.shotFired(gun_pos)
 
 		if time.time() - trigTime > 0.05:

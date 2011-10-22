@@ -67,7 +67,7 @@ class Ak47Wiimote(Ak47):
         self.calib_points = []
 
     def get_pos(self):
-	screen_reso = (1360,768)
+	screen_reso = (1024,768)
 
 	self.ir_pos = self.volatile_ir_pos[:]
 	self.fire_button = self.volatile_fire_button
@@ -102,11 +102,14 @@ class Ak47Wiimote(Ak47):
         return [int(ret_x*screen_reso[0]), int(ret_y*screen_reso[1])], self.fire_button 
  
     def fire(self, on):
-	if not on:
-            self.wiimote.led = 0
-	else:
-	    self.wiimote.led = cwiid.LED2_ON 
-
+	try:
+	    if not on:
+                self.wiimote.led = 0
+	    else:
+	        self.wiimote.led = cwiid.LED2_ON
+        except:
+            print "wiimote led state change failed! (solenoid command!)"
+            print self.wiimote
 
     def reload_ak(self):
 	acc = self.volatile_acc_data[:]

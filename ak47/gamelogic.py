@@ -18,8 +18,7 @@ class GameLogic:
 	self.reloadImage = pygame.image.load('gfx/reload.png').convert_alpha()
 	self.gfxscale = 1.0
 	self.lastEnemyAddedTime = pygame.time.get_ticks()
-	self.enemyAddInterval = 6000
-	self.font = pygame.font.Font(None, 25)
+	self.font = pygame.font.Font(None, 50)
 	self.gameEnded = True
 
     def scaleBitmap(self, sf, scale):
@@ -35,7 +34,9 @@ class GameLogic:
 
     def tick(self):
 	curtime = pygame.time.get_ticks()
+	self.screen.fill([0,0,0], Rect(0,self.bg.get_height(),self.screen.get_width(),self.screen.get_height()))
 	self.screen.blit(self.bg, (0,0))
+	
 
 	if self.gameEnded:
 		return self.gameEnded, self.score
@@ -65,16 +66,17 @@ class GameLogic:
 
 	self.effects.tick()
 
+	if self.waveStart + 20000 < curtime:
+		self.wave +=1
+		self.waveStart = curtime
+		self.enemyAddInterval -= 50
+		print 'Start wave ' + str(self.wave)
+		if self.wave % 4==0:
+			self.enemies.append(Medikit(self.gfxscale, self.screen, self.clock, self.effects))
+
 	if self.wave % 2==0:
 		if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
 			self.addRandomEnemy()
-	if self.waveStart + 10000 < curtime:
-		self.wave +=1
-		self.waveStart = curtime
-		print 'Start wave ' + str(self.wave)
-		if self.wave % 5==0:
-			self.enemies.append(Medikit(self.gfxscale, self.screen, self.clock, self.effects))
-
 	if self.health==0:
 		self.effects.showPain(100)
 		self.enemies = []
@@ -83,7 +85,7 @@ class GameLogic:
 	if self.health > 0 and self.ammo == 0:
 		self.screen.blit(self.reloadImage, (self.screen.get_width()/2 - self.reloadImage.get_width()/2,self.screen.get_height()/2 - self.reloadImage.get_height()/2))
 	self.screen.blit(self.healthText, [10,10])
-	self.screen.blit(self.scoreText, [10,40])
+	self.screen.blit(self.scoreText, [10,60])
 
         return self.gameEnded, self.score
 
@@ -116,17 +118,16 @@ class GameLogic:
     def addRandomEnemy(self):
 	enemyType = random.randint(0,100)
 #	enemyType = 2
-	if enemyType < 20:
-		enemy = Panzer(self.gfxscale, self.screen, self.clock, self.effects)
-	elif enemyType < 50:
+	if enemyType < 5 :
 		enemy = Helicopter(self.gfxscale, self.screen, self.clock, self.effects)
+	elif enemyType < 10:
+		enemy = Panzer(self.gfxscale, self.screen, self.clock, self.effects)
 	else:
 		enemy = Soldier(self.gfxscale, self.screen, self.clock, self.effects)
 
 	self.enemies.append(enemy)
-	if self.enemyAddInterval > 1000:
-		self.enemyAddInterval = self.enemyAddInterval - 500
 	self.lastEnemyAddedTime = pygame.time.get_ticks()
+
 	
     def close(self):
 	pass
@@ -137,6 +138,7 @@ class GameLogic:
 	self.score = 0
 	self.ammo = 30
 	self.wave = 0
+	self.enemyAddInterval = 1100
 	self.waveStart = pygame.time.get_ticks()
 	self.updateHealth()
 	self.updateScore()

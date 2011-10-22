@@ -188,8 +188,8 @@ class highscores:
         self.title = title_font.render("High scores", 1, (0,0,0))
         self.scores = []
 
-        self.new_game_button = button((900,590), (300,80), "New Game")
-        self.menu_button = button((450,590), (300,80), "Main Menu")
+        self.new_game_button = button((600,590), (300,80), "New Game")
+        self.menu_button = button((350,590), (300,80), "Main Menu")
 
 
     def reload_scores(self, highlight, score_pos = 0):
@@ -287,13 +287,15 @@ class welcome:
         self.title = title_font.render("AK47 World Tour 1984", 1, (0,0,0))
         self.lines = []
         self.lines.append(text_font.render("The game is created by Hackerspace 5w, Tampere (5w.fi)", 1, (0,0,0)))
+	self.lines.append(text_font.render("Code> Petri Mantere, Ville Ranki", 1, (0,0,0)))
+	self.lines.append(text_font.render("Graphics> Eeva Andrejeff", 1, (0,0,0)))
 	self.lines.append(text_font.render("", 1, (0,0,0)))
         self.lines.append(text_font.render("-Use \"real\" sights as there is no virtual sight in the game", 1, (0,0,0)))
 	self.lines.append(text_font.render("-You have 30 rounds in one magazine, after that reload is needed", 1, (0,0,0)))
 	self.lines.append(text_font.render("-Make your motherland proud!", 1, (0,0,0)))
 
-        self.new_game_button = button((900,590), (300,80), "New Game")
-        self.high_scores_button = button((450,590), (300,80), "High Scores")
+        self.new_game_button = button((550,530), (400,80), "New Game")
+        self.high_scores_button = button((100,530), (400,80), "High Scores")
 
     def update(self, screen, cursor):
         screen.blit(self.title, (400,80))
