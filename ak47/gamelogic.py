@@ -20,6 +20,8 @@ class GameLogic:
 	self.lastEnemyAddedTime = pygame.time.get_ticks()
 	self.font = pygame.font.Font(None, 50)
 	self.gameEnded = True
+	self.waveTime = 20000
+	self.wavePauseTime = 5000
 
     def scaleBitmap(self, sf, scale):
 	return pygame.transform.smoothscale(sf, (int(sf.get_width() * scale), int(sf.get_height() * scale)))
@@ -66,12 +68,21 @@ class GameLogic:
 
 	self.effects.tick()
 
-	if self.waveStart + 20000 < curtime:
+	waveEndtime = self.waveStart + self.wavePauseTime
+	if self.wave % 2==0:
+		waveEndtime = self.waveStart + self.waveTime
+		if curtime - self.lastEnemyAddedTime > self.enemyAddInterval:
+			self.addRandomEnemy()
+
+	if waveEndtime < curtime:
+
 		self.wave +=1
 		self.waveStart = curtime
 		self.enemyAddInterval -= 50
 		print 'Start wave ' + str(self.wave)
-		if self.wave % 4==0:
+
+		if self.wave % 3==0:
+
 			self.enemies.append(Medikit(self.gfxscale, self.screen, self.clock, self.effects))
 
 	if self.wave % 2==0:
