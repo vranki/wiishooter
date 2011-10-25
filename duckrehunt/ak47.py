@@ -87,10 +87,13 @@ class Ak47:
         return [int(ret_x*640), int(ret_y*480)], self.fire_button 
  
     def fire(self, on):
-	if not on:
-            self.wiimote.led = 0
-	else:
-	    self.wiimote.led = cwiid.LED2_ON       
+	try:
+		if not on:
+        	    self.wiimote.led = 0
+		else:
+		    self.wiimote.led = cwiid.LED2_ON       
+	except AttributeError:
+		pass
 
     def calibrate(self, calib_index):
         self.calc_distance()
@@ -210,9 +213,13 @@ class Ak47:
 
         if not self.valid_value():
             return
-
-	led1 = self.ir_pos[0]["pos"]
-	led2 = self.ir_pos[1]["pos"]
+	try:
+		led1 = self.ir_pos[0]["pos"]
+		led2 = self.ir_pos[1]["pos"]
+	except TypeError:
+		led1 = [0,0]
+		led2 = [0,0]
+		pass
 
         # angle between ir-blobs
         alfa = sqrt( (led1[0] - led2[0]) ** 2 + (led1[1] - led2[1]) ** 2 ) * pix

@@ -9,7 +9,7 @@ import pygame, random
 pygame.init()
 
 from DuckLib import *
-import ak47
+import ak47_2
 import time
 import menusystem
 
@@ -19,7 +19,7 @@ def gamePlay():
     screen_dim = screen.get_rect()
     pygame.mouse.set_visible(False)
     pygame.display.set_caption("Duck Rehunt: Reckoning")
-    myAK = ak47.Ak47()
+    myAK = ak47_2.Ak47()
     myAK.load_calibration("full_screen_calib.txt")
     pygame.mixer.init()
     pygame.mixer.Sound("Music.ogg").play(-1)
