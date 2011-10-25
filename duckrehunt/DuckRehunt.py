@@ -241,31 +241,31 @@ def highScores(myScore):
 
     top3Flag = False
 
-    for line in f:
-        line = line.strip()
-        if int(line) < myScore and not top3Flag:
-            scores.append(myScore)
-            top3Flag = True
-        scores.append(int(line))
+#    for line in f:
+#        line = line.strip()
+#        if int(line) < myScore and not top3Flag:
+#            scores.append(myScore)
+#            top3Flag = True
+#        scores.append(int(line))
 
     #print scores
 
-    f.close()
-    f = open("highscores.txt", "w+")
+#    f.close()
+#    f = open("highscores.txt", "w+")
 
-    for i in range(0,3):
-        print scores[i]
-        f.write(str(scores[i]) + "\n")
-        lines.append(myFont1.render(str(scores[i]), 1, (0,0,0)))
+#    for i in range(0,3):
+#        print scores[i]
+#        f.write(str(scores[i]) + "\n")
+#        lines.append(myFont1.render(str(scores[i]), 1, (0,0,0)))
 
-    f.close()
+#    f.close()
 
-    if top3Flag:
-        lines.append(myFont1.render("", 1, (0,0,0)))
-        lines.append(myFont1.render("", 1, (0,0,0)))
-        lines.append(myFont1.render("Congratz, you made to TOP 3!!", 1, (0,0,0)))
+#    if top3Flag:
+#        lines.append(myFont1.render("", 1, (0,0,0)))
+#        lines.append(myFont1.render("", 1, (0,0,0)))
+#        lines.append(myFont1.render("Congratz, you made to TOP 3!!", 1, (0,0,0)))
 
-    butText = titleFont1.render("mkay", 1, (0,0,0))
+#    butText = titleFont1.render("mkay", 1, (0,0,0))
 
     keepGoing = True
     killGame = False
@@ -338,7 +338,7 @@ if __name__ == "__main__":
         if killGame:
             break
         #score = 68
-        killGame = highScores(score)
+        #killGame = highScores(score)
         if killGame:
             break
 

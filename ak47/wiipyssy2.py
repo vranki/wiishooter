@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 import pygame
-import ak47
+import ak47wiimote
 from pygame.locals import *
 
 def drawCalibrationStuff(screen, calibrationPhase):
@@ -40,11 +40,11 @@ def main():
         #gunSound = pygame.mixer.Sound('gun.wav')
         #Connect to address given on command-line, if present
         print 'Put ak47 in discoverable mode now (press connection button)...'
-	gun = ak47.Ak47()
+	gun = ak47wiimote.Ak47Wiimote()
         print 'OK'
  
         # Set the height and width of the screen
-        size=[1000,700]
+        size=[0,0]
         screen=pygame.display.set_mode(size, FULLSCREEN)
  
         pygame.display.set_caption("PYSSYTESTI")
